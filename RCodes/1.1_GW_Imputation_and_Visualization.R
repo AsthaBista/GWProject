@@ -1,5 +1,10 @@
-a
+############----------------Data Processing-------------------------------------------------######
+## This program takes the select groundwater levels time series with missing values and
+## uses linear interpolation to replace the missing values. 
+## This program also plots graphs to visualize the original groundwater wells after using 
+## interpolation
 
+## Setting up the project
 setwd("C:/Users/Aastha/Desktop/GWProject")
 list.of.packages <- c("ggplot2", "imputeTS","reshape2","dplyr")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
