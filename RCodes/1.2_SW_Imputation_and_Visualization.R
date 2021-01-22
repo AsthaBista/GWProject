@@ -1,7 +1,7 @@
 ############----------------Data Processing-------------------------------------------------######
-## This program takes the select groundwater levels time series with missing values and
+## This program takes the select stream gauge height time series with missing values and
 ## uses linear interpolation to replace the missing values. 
-## This program also plots graphs to visualize the original groundwater wells after using 
+## This program also plots graphs to visualize the original stream gauge height after using 
 ## interpolation
 
 ## Setting up the project
