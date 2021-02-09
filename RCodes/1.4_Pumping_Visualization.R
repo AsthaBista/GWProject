@@ -1,5 +1,5 @@
 setwd("C:/Users/Aastha/Desktop/GWProject")
-list.of.packages <- c("ggplot2", "imputeTS","reshape2","dplyr")
+list.of.packages <- c("ggplot2")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
 
