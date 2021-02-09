@@ -2,8 +2,7 @@
 title: "ProcessingData"
 author: "Astha Bista"
 date: "1/18/2021"
-output: html_document
-keep_md: true
+output: md_document
 ---
 ```{r , echo=FALSE, warning=FALSE}
 setwd("C:/Users/Aastha/Desktop/GWProject")
