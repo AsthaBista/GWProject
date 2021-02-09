@@ -200,7 +200,7 @@ The pumping data was obtained from the [CENEB Groundwater model report](https://
 
 
 ```{r echo=FALSE}
-pmp <- read.csv(file ="Data_Processing/CENEB_PumpingData/Pumping.csv",header = TRUE)
+pmp <- read.csv(file ="Data_Processing/Pumping.csv",header = TRUE)
 head(pmp)
 ```
 

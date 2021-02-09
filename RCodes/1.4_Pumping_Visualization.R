@@ -5,7 +5,7 @@ if(length(new.packages)) install.packages(new.packages)
 
 
 ## Read the data containing groundwater levels with missing values
-pmp <- read.csv(file ="Data_Processing/CENEB_PumpingData/Pumping.csv",header = TRUE)
+pmp <- read.csv(file ="Data_Processing/Pumping.csv",header = TRUE)
 head(pmp)
 
 ## Count the missing values
