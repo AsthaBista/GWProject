@@ -1,0 +1,12 @@
+---
+references:
+- id: field2012
+  title: Discovering statistics using R
+  author:
+  - family: Field,Miles, Field
+    given: Andy P.,Jeremy, Zoë
+  URL: 'https://onlinelibrary.wiley.com/doi/abs/10.1111/insr.12011_21'
+  type: book
+  issued:
+    year: 2012
+---
