@@ -122,7 +122,7 @@ corrplot(cor.mat, type="upper", order="hclust",
 ```
 
 ### Performing PCA
-The data is first standardized by centering and scaling.
+PCA analysis operation was followed step by step from [@kassambara2017practical] and [link](http://www.sthda.com/english/wiki/print.php?id=202). The data is first standardized by centering and scaling.
 ```{r}
 GWData<-scale(GWData)
 ```
@@ -162,4 +162,7 @@ Scores:
 head(scores)
 ```
 
+# Cluster Analysis
 
+
+# References

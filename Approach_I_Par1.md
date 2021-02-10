@@ -136,7 +136,11 @@ in wells.
 
 ### Performing PCA
 
-The data is first standardized by centering and scaling.
+PCA analysis operation was followed step by step from (<span
+class="citeproc-not-found"
+data-reference-id="kassambara2017practical">**???**</span>) and
+[link](http://www.sthda.com/english/wiki/print.php?id=202). The data is
+first standardized by centering and scaling.
 
     GWData<-scale(GWData)
 
@@ -187,6 +191,12 @@ Scores:
     ## 4 4.2597 -3.0189 0.55002 -0.289533  0.124108
     ## 5 3.8887 -2.9178 0.77289 -0.978796  0.268168
     ## 6 3.2516 -2.6605 0.72420 -1.772507  0.266751
+
+Cluster Analysis
+================
+
+References
+==========
 
 Chajewski, Michael. 2009. *Rela: Item Analysis Package with Standard
 Errors*. <https://CRAN.R-project.org/package=rela>.
