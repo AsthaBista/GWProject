@@ -1,34 +1,3 @@
-    setwd("C:/Users/Aastha/Desktop/GWProject")
-    list.of.packages <- c("tseries","FactoMineR","factoextra","rela","psych","corrplot")
-    new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
-    if(length(new.packages)) install.packages(new.packages)
-    library("FactoMineR")
-    library("factoextra")
-
-    ## Loading required package: ggplot2
-
-    ## Welcome! Want to learn more? See two factoextra-related books at https://goo.gl/ve3WBa
-
-    library(rela)
-    library(psych)
-
-    ## 
-    ## Attaching package: 'psych'
-
-    ## The following objects are masked from 'package:ggplot2':
-    ## 
-    ##     %+%, alpha
-
-    library(corrplot)
-
-    ## corrplot 0.84 loaded
-
-    library(tseries)
-
-    ## Registered S3 method overwritten by 'quantmod':
-    ##   method            from
-    ##   as.zoo.data.frame zoo
-
 Before beginning, here is a function to plot many time series using
 ggplot.We will be using this function in the following lines to plot
 stationary time series.

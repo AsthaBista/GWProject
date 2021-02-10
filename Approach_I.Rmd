@@ -12,7 +12,7 @@ link-citations: true
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r  warning=FALSE}
+```{r  warning=FALSE,, include=FALSE, echo=FALSE}
 setwd("C:/Users/Aastha/Desktop/GWProject")
 list.of.packages <- c("tseries","FactoMineR","factoextra","rela","psych","corrplot")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
