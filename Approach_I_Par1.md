@@ -136,9 +136,8 @@ in wells.
 
 ### Performing PCA
 
-PCA analysis operation was followed step by step from (<span
-class="citeproc-not-found"
-data-reference-id="kassambara2017practical">**???**</span>) and
+PCA analysis operation was followed step by step from (Kassambara
+[2017](#ref-kassambara2017practical)) and
 [link](http://www.sthda.com/english/wiki/print.php?id=202). The data is
 first standardized by centering and scaling.
 
@@ -204,3 +203,6 @@ Errors*. <https://CRAN.R-project.org/package=rela>.
 Field, Andy P, Jeremy Miles, and Zoë Field. 2012. “Discovering
 Statistics Using R/Andy Field, Jeremy Miles, Zoë Field.” London;
 Thousand Oaks, Calif.: Sage,
+
+Kassambara, Alboukadel. 2017. *Practical Guide to Principal Component
+Methods in R: PCA, M (ca), Famd, Mfa, Hcpc, Factoextra*. Vol. 2. Sthda.
