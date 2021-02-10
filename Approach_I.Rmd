@@ -2,9 +2,17 @@
 title: "Approach I"
 author: "Astha Bista"
 date: "2/9/2021"
-output: html_document
+output: md_document
+bibliography: [packages.bib, ref.bib]
+biblio-style: "apalike"
+link-citations: true
 ---
-```{r echo=FALSE,include=FALSE, warning=FALSE}
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r  warning=FALSE}
 setwd("C:/Users/Aastha/Desktop/GWProject")
 list.of.packages <- c("tseries","FactoMineR","factoextra","rela","psych","corrplot")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
@@ -48,13 +56,13 @@ create_timeseries_plots <- function(df){
 # Converting time series to stationary
 In this approach, the time series data is made stationary using first differencing methods. For testing stationarity, Augmented Dickey-Fuller (ADF) t-statistic test for unit root was used.
 
-```{r echo=FALSE,warning=FALSE}
+```{r warning=FALSE}
 GWData<-read.csv(file ="Data_Processing/GWLevel_imputed.csv",header = TRUE)  
 head(GWData)
 ```
 Now, loop around each column in the dataframe to obtain a dataframe containing first degree differenced values.
 
-```{r echo=FALSE,warning=FALSE,include=FALSE}
+```{r warning=FALSE,include=FALSE}
 diff_gw<-c()
 for(i in 2:13){               #Loop around 13 wells groundwater levels
   diff_dat<-diff(GWData[,i])    #First degree differencing
@@ -71,31 +79,31 @@ for(i in 1:12){
 ```
 This above procedure were also used to create stationary time series of stream stage, precipitation, and pumping.
 Below is the plot showing the stationary time series. Please note that the units are differences of water levels between a month and preceding month, therefore the negative values in some cases.
-```{r  fig.height=10,fig.width=10,echo = FALSE, warning=FALSE}
+```{r  fig.height=10,fig.width=10, warning=FALSE}
 create_timeseries_plots(diff_gw)
 ```
 
 # Principal Component Analysis
 
 ### Check suitability of PCA
-```{r echo=FALSE}
+```{r }
 #First compute correlation matrix
 GWDataCor <- cor(GWData)
 ```
 
-We now examine the data to assess whether the assumptions for PCA have been met before proceeding. We use the paf() function from the rela package.
-```{r echo=FALSE, include=FALSE}
+We now examine the data to assess whether the assumptions for PCA have been met before proceeding. For this, instructions from [@field2012discovering] were used. We use the paf() function from the rela package [@R-rela].
+```{r  include=FALSE}
 assumptions <- paf(as.matrix(GWData), eigcrit = 1, convcrit = .001)
 ```
 
-To test for the first assumption, Bartlett’s Test for Sphericity was performed. The null hypothesis for this test is that the intercorrelation matrix comes from a noncollinear populaton or simply that there is nocollinearity between the variables, which would render PCA impossible as it depends on the construction of a linear combination of the variables. We use a significance level α=.05.(----------cite)
+To test for the first assumption, Bartlett’s Test for Sphericity was performed. The null hypothesis for this test is that the intercorrelation matrix comes from a noncollinear populaton or simply that there is nocollinearity between the variables, which would render PCA impossible as it depends on the construction of a linear combination of the variables. We use a significance level α=.05.
 ```{r ,warning=FALSE}
 bartlettTest <- cortest.bartlett(GWDataCor)
 bartlettTest
 ```
 
 Bartlett test is rejected because p values is less than 0.01. Now we will extract Kaiser-Meyer-Olkin (KMO) from the assumptions object.
-```{r echo=FALSE}
+```{r }
 print(assumptions$KMO)
 ```
 
@@ -107,7 +115,7 @@ The determinant is positive, hence it satisfies all three assumptions of PCA. Th
 
 ### Analyzing correlation matrix
 The correlation matrix is shown graphically. This following plot gives a prelimminary insight on the relationship between the groundwater levels in wells.
-```{r, echo=FALSE}
+```{r}
 cor.mat <- round(cor(GWData),2)
 corrplot(cor.mat, type="upper", order="hclust", 
          tl.col="black", tl.srt=45)
@@ -134,23 +142,23 @@ lines(x = 1:nrow(eigenvalues), eigenvalues[, 2],
 ```
 
 The above screeplot shows that three components are dominant in the data. Therefore, we will use three principal components. The variables can also be shown in a base graph showing contribution levels of each well along with information on the alignment of each well on principal components.
-```{r echo=FALSE}
+```{r }
 fviz_pca_var(res.pca, col.var="contrib")+ 
   scale_color_gradient2(low="white",mid="blue",high="red", midpoint=2.5)+theme_bw()
 ```
 
 ### Output
 The main output of PCA are PC scores and PC loadings.
-```{r echo=FALSE}
+```{r }
 loadings<-sweep(res.pca$var$coord,2,sqrt(res.pca$eig[1:ncol(res.pca$var$coord),1]),FUN="/")
 scores <- res.pca$ind$coord
 ```
 Loadings:
-```{r echo=FALSE}
+```{r }
 head(loadings)
 ```
 Scores:
-```{r echo=FALSE}
+```{r }
 head(scores)
 ```
 

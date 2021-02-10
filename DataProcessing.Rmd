@@ -98,7 +98,7 @@ na_count <-sapply(swgaugeht[,-1], function(y) sum(length(which(is.na(y)))))
 
 Out of the 12 gauge stations, seven stations were selected based on the percentage of missing values.Interpolation was carried out using na_interp to impute missing values.
 
-```{r ,echo = FALSE, warning=FALSE}
+```{r , warning=FALSE}
 library(imputeTS)
 sw_imputed<-c()
 for(i in c(2,3,6,10,11,12,13)){
@@ -169,7 +169,7 @@ na_count <-sapply(prec, function(y) sum(length(which(is.na(y)))))
 
 Out of the 12 gauge stations, seven stations were selected based on the percentage of missing values. Interpolation was carried out using na_interp to impute missing values.
 
-```{r ,echo = FALSE, warning=FALSE}
+```{r , warning=FALSE}
 library(imputeTS)
 prec_imputed<-c()
 for(i in 1:ncol(prec)){
