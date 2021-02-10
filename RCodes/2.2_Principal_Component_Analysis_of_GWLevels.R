@@ -1,6 +1,6 @@
 ###----------------------------------------------------------------------------------------------
 #This code has three parts:
-#Exploratory analysis of the data: Summary statistics, correlation
+#Exploratory analysis of the data
 #Principal Component Analysis using FactoMineR package and preliminary visualization
 #Scores and Loadings from PCA
 #Source: http://www.sthda.com/english/wiki/print.php?id=202  

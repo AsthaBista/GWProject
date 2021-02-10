@@ -1,3 +1,7 @@
+This document consists of two main parts of Approach I: Principal
+component analysis and cluster analysis. The data used were firsk made
+stationary by using first degree differencing.
+
 Before beginning, here is a function to plot many time series using
 ggplot.We will be using this function in the following lines to plot
 stationary time series.
@@ -194,6 +198,82 @@ Scores:
 
 Cluster Analysis
 ================
+
+Loadings from PCA was used in cluster analysis.
+
+    ldfile<-read.csv(file = "Approach_I/PC_loadings.csv",header = T)
+    selectedData<-ldfile[,2:4]
+    row.names(selectedData)<-c("W60","W63","W67","W70","W73","W74","W78","W80","W81","W115",
+                               "W116","W118")
+    selectedData
+
+    ##          Dim.1     Dim.2      Dim.3
+    ## W60   0.165426  0.323885 -0.4906888
+    ## W63   0.411455 -0.189212 -0.0506042
+    ## W67   0.426939 -0.192569  0.0068236
+    ## W70   0.136264  0.467111  0.2664983
+    ## W73   0.182949  0.256871  0.3146377
+    ## W74   0.144564  0.376994 -0.4538613
+    ## W78   0.385414 -0.128162  0.1359096
+    ## W80   0.180484  0.366425 -0.2726035
+    ## W81   0.370337 -0.256314 -0.0680691
+    ## W115  0.262490  0.184421  0.3241264
+    ## W116  0.400386 -0.048097  0.0460384
+    ## W118 -0.025431  0.378418  0.4195401
+
+Elbow method to find optimal number of clusters:
+
+    fviz_nbclust(selectedData, kmeans, method = "wss") +
+      geom_vline(xintercept = 3, linetype = 2)+
+      labs(subtitle = "Elbow method")
+
+![](Approach_I_Par1_files/figure-markdown_strict/unnamed-chunk-20-1.png)
+
+Using heirarchical clustering:
+
+    distanceData = dist(selectedData, method="euclidean")
+    hclustData<-hclust(distanceData,method="ward.D")
+    plot(hclustData,main=" ",sub="Heirarchical clustering",xlab=" ")
+    rect.hclust(hclustData, k=3,border = "red")
+    mtext('Group A',side = 1,at = 3)
+    mtext('Group B',side = 1,at = 7)
+    mtext('Group C',side = 1,at = 10)
+
+![](Approach_I_Par1_files/figure-markdown_strict/unnamed-chunk-21-1.png)
+
+Using k-means clustering:
+
+    kmeansData<-kmeans(selectedData,3) 
+    ClusterData<-kmeansData$cluster
+
+Now, plotting loadings of PC1 against P2, PC2 against PC3, and PC3
+against PC1
+
+    palette(c("maroon","blue","dark green"))
+    plot(selectedData[,1],selectedData[,2],ylim=c(-0.3,0.6),xlim=c(-0.15,0.45),
+         xlab="PC1",ylab="PC2",pch=19,cex=1,lty='solid',lwd=2,col= ClusterData)
+    text(selectedData[,c(1,2)],labels=rownames(selectedData),cex=1,pos=3,col= ClusterData)
+    legend('topright',legend=c("Group A","Group B","Group C"),col=c("maroon","blue","dark green"),pch=19,
+           cex=1,bty="y")
+    grid()
+
+![](Approach_I_Par1_files/figure-markdown_strict/unnamed-chunk-23-1.png)
+
+    plot(selectedData[,2],selectedData[,3],ylim=c(-0.5,0.7),xlim=c(-0.3,0.6),
+         xlab="PC2",ylab="PC3",pch=19,cex=1,lty='solid',lwd=2,col= ClusterData)
+    text(selectedData[,c(2,3)],labels=rownames(selectedData),cex=1,pos=3,col= ClusterData)
+    legend('topright',legend=c("Group A","Group B","Group C"),col=c("maroon","blue","dark green"),pch=19,
+           cex=1,bty="y")
+
+![](Approach_I_Par1_files/figure-markdown_strict/unnamed-chunk-24-1.png)
+
+    plot(selectedData[,1],selectedData[,3],ylim=c(-0.5,0.6),xlim=c(-0.1,0.5),
+         xlab="PC1",ylab="PC3",pch=19,cex=1,lty='solid',lwd=2,col= ClusterData)
+    text(selectedData[,c(1,3)],labels=rownames(selectedData),cex=1,pos=3,col= ClusterData)
+    legend('topright',legend=c("Group A","Group B","Group C"),col=c("red","blue","dark green"),pch=19,
+           cex=1,bty="y")
+
+![](Approach_I_Par1_files/figure-markdown_strict/unnamed-chunk-25-1.png)
 
 References
 ==========
