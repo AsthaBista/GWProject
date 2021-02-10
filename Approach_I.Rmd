@@ -23,11 +23,10 @@ library(rela)
 library(psych)
 library(corrplot)
 library(tseries)
+```
+Before beginning, here is a function to plot many time series using ggplot.We will be using this function in the following lines to plot stationary time series.
 
-## First, here is a function to plot many time series using ggplot
-## We will be using this function in the following lines
-## Plot the stationary time series
-
+```{r}
 create_timeseries_plots <- function(df){
   # change into metres
   df <- sapply(as.data.frame(df), function(y) y*0.3048)
@@ -52,6 +51,7 @@ create_timeseries_plots <- function(df){
 }
 
 ```
+
 
 # Converting time series to stationary
 In this approach, the time series data is made stationary using first differencing methods. For testing stationarity, Augmented Dickey-Fuller (ADF) t-statistic test for unit root was used.

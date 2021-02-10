@@ -29,9 +29,9 @@
     ##   method            from
     ##   as.zoo.data.frame zoo
 
-    ## First, here is a function to plot many time series using ggplot
-    ## We will be using this function in the following lines
-    ## Plot the stationary time series
+Before beginning, here is a function to plot many time series using
+ggplot.We will be using this function in the following lines to plot
+stationary time series.
 
     create_timeseries_plots <- function(df){
       # change into metres
@@ -103,7 +103,7 @@ values in some cases.
     ## 
     ##     intersect, setdiff, setequal, union
 
-![](Approach_I_files/figure-markdown_strict/unnamed-chunk-4-1.png)
+![](Approach_I_files/figure-markdown_strict/unnamed-chunk-5-1.png)
 
 Principal Component Analysis
 ============================
@@ -163,7 +163,7 @@ in wells.
     corrplot(cor.mat, type="upper", order="hclust", 
              tl.col="black", tl.srt=45)
 
-![](Approach_I_files/figure-markdown_strict/unnamed-chunk-10-1.png)
+![](Approach_I_files/figure-markdown_strict/unnamed-chunk-11-1.png)
 
 ### Performing PCA
 
@@ -175,7 +175,7 @@ Now, FactoMine package is used to perform PCA.
 
     res.pca <- PCA(GWData, graph = F)
 
-![](Approach_I_files/figure-markdown_strict/unnamed-chunk-13-1.png)
+![](Approach_I_files/figure-markdown_strict/unnamed-chunk-14-1.png)
 
 The above screeplot shows that three components are dominant in the
 data. Therefore, we will use three principal components. The variables
@@ -186,7 +186,7 @@ components.
     fviz_pca_var(res.pca, col.var="contrib")+ 
       scale_color_gradient2(low="white",mid="blue",high="red", midpoint=2.5)+theme_bw()
 
-![](Approach_I_files/figure-markdown_strict/unnamed-chunk-14-1.png)
+![](Approach_I_files/figure-markdown_strict/unnamed-chunk-15-1.png)
 
 ### Output
 
