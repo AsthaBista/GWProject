@@ -34,7 +34,7 @@ na_count
 
 The missing values in the data are imputed using na_interp command in forecast package[@R-forecast]. In this command, for seasonal series, a robust STL decomposition is first computed. Then a linear interpolation is applied to the seasonally adjusted data, and the seasonal component is added back. @moritz2015comparison compared interpolation methods and found that this method gave the least error.
 
-```{r ,echo = FALSE, warning=FALSE}
+```{r , warning=FALSE}
 library(forecast)
 gw_imputed<-c()
 for(i in 2:ncol(gwlevel)){

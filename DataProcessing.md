@@ -39,9 +39,20 @@ adjusted data, and the seasonal component is added back. Moritz et al.
 ([2015](#ref-moritz2015comparison)) compared interpolation methods and
 found that this method gave the least error.
 
+    library(forecast)
+
     ## Registered S3 method overwritten by 'quantmod':
     ##   method            from
     ##   as.zoo.data.frame zoo
+
+    gw_imputed<-c()
+    for(i in 2:ncol(gwlevel)){
+            imp <- na.interp(gwlevel[,i])
+            gw_imputed<-cbind(gw_imputed,imp)
+    }
+           
+    colnames(gw_imputed)<-c("W60","W63","W67","W70","W73","W74","W78","W80","W81","W115","W116","W118")
+    head(gw_imputed)
 
     ## Time Series:
     ## Start = 1 
