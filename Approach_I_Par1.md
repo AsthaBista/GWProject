@@ -143,7 +143,8 @@ first standardized by centering and scaling.
 
     GWData<-scale(GWData)
 
-Now, FactoMine package is used to perform PCA.
+Now, FactoMine package (Lê, Josse, and Husson
+[2008](#ref-FactoMineR2008)) is used to perform PCA.
 
     res.pca <- PCA(GWData, graph = F)
 
@@ -206,3 +207,7 @@ Thousand Oaks, Calif.: Sage,
 
 Kassambara, Alboukadel. 2017. *Practical Guide to Principal Component
 Methods in R: PCA, M (ca), Famd, Mfa, Hcpc, Factoextra*. Vol. 2. Sthda.
+
+Lê, Sébastien, Julie Josse, and François Husson. 2008. “FactoMineR: A
+Package for Multivariate Analysis.” *Journal of Statistical Software* 25
+(1): 1–18. <https://doi.org/10.18637/jss.v025.i01>.

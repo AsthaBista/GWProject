@@ -126,7 +126,7 @@ PCA analysis operation was followed step by step from [@kassambara2017practical]
 ```{r}
 GWData<-scale(GWData)
 ```
-Now, FactoMine package is used to perform PCA.
+Now, FactoMine package [@FactoMineR2008] is used to perform PCA.
 ```{r}
 res.pca <- PCA(GWData, graph = F)
 ```
