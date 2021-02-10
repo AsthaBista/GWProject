@@ -3,17 +3,20 @@ title: "ProcessingData"
 author: "Astha Bista"
 date: "1/18/2021"
 output: md_document
+bibliography: [packages.bib, ref.bib]
+biblio-style: "apalike"
+link-citations: true
 ---
 ```{r , echo=FALSE, warning=FALSE}
 setwd("C:/Users/Aastha/Desktop/GWProject")
-list.of.packages <- c("ggplot2", "imputeTS","reshape2","dplyr")
+list.of.packages <- c("ggplot2", "forecast","reshape2","dplyr","forecast")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
 ```
 
 # Groundwater levels
 Groundwater levels were obtained from [United States Geological Survey (USGS) National Groundwater Monitoring Network](https://cida.usgs.gov/ngwmn/) for Platte River Basin in Nebraska from 2000 to 2018. 12 groundwater wells were selected based on data available, and screen depth. 
-Read the data containing groundwater levels with missing values
+Read the data containing groundwater levels with missing values:
 
 ```{r rawdata, echo=FALSE}
 gwlevel <- read.csv(file ="Data_Processing/GWLevel_with_missinggaps.csv",header = TRUE)
@@ -29,14 +32,13 @@ na_count
 
 ## Imputation of missing values and visualization of data
 
-Since the number of missing values is less than 10%, a linear interpolation was used
-Linear interpolation of each time series:
+The missing values in the data are imputed using na_interp command in forecast package[@R-forecast]. In this command, for seasonal series, a robust STL decomposition is first computed. Then a linear interpolation is applied to the seasonally adjusted data, and the seasonal component is added back. @moritz2015comparison compared interpolation methods and found that this method gave the least error.
 
 ```{r ,echo = FALSE, warning=FALSE}
-library(imputeTS)
+library(forecast)
 gw_imputed<-c()
 for(i in 2:ncol(gwlevel)){
-        imp <- na.interpolation(gwlevel[,i],option = 'linear')
+        imp <- na.interp(gwlevel[,i])
         gw_imputed<-cbind(gw_imputed,imp)
 }
        
@@ -45,10 +47,17 @@ head(gw_imputed)
 ```
 Here is a plot of the points interpolated in one of the time series.
 ```{r ,echo = FALSE,fig.height=3,fig.width=6, warning=FALSE}
-imp <- na.interpolation(sapply(as.data.frame(gwlevel[,11]), function(y) y*0.3048),option = 'linear')
-ggplot_na_imputations(sapply(as.data.frame(gwlevel[,11]), function(y) y*0.3048),imp,
-                      xlab="Months",ylab = "Water level (m)",
-                      subtitle = colnames(gwlevel)[11])
+dat <- gwlevel[,11]*0.3048
+dates = seq(from = as.Date("2000-01-01"), to = as.Date("2018-12-1"), by = 'month')
+imp <- na.interp(dat)
+x <- 2000 + (which(is.na(dat))-1)/12 
+y <- imp[which(is.na(dat))]
+
+dat.ts<-ts(dat,start=c(2000,1),end=c(2018,12),frequency = 12)
+ts.plot(dat.ts,gpars = list(xlab="Year",ylab="Water level (m)"),main = "Imputed values",type="o",lwd=1,col="blue")
+points(x,y,col="red",pch=1,cex=1) 
+mtext(colnames(gwlevel)[11])
+grid()
 ```
 ```{r,echo = FALSE, warning=FALSE}
 gwlevel_m <- sapply(as.data.frame(gw_imputed), function(y) y*0.3048)
@@ -87,13 +96,13 @@ na_count <-sapply(swgaugeht[,-1], function(y) sum(length(which(is.na(y)))))
 ```
 ## Imputation of missing values and visualization of data
 
-Out of the 12 gauge stations, seven stations were selected based on the percentage of missing values. These time series were further used in linear interpolation.
+Out of the 12 gauge stations, seven stations were selected based on the percentage of missing values.Interpolation was carried out using na_interp to impute missing values.
 
 ```{r ,echo = FALSE, warning=FALSE}
 library(imputeTS)
 sw_imputed<-c()
 for(i in c(2,3,6,10,11,12,13)){
-        imp <- na.interpolation(swgaugeht[,i],option = 'linear')
+        imp <- na.interp(swgaugeht[,i])
         sw_imputed<-cbind(sw_imputed,imp)
 }
 
@@ -103,10 +112,19 @@ head(sw_imputed)
 ```
 Here is a plot of the points interpolated in one of the time series.
 ```{r ,echo = FALSE,fig.height=3,fig.width=6, warning=FALSE}
-imp <- na.interpolation(sapply(as.data.frame(swgaugeht[,11]), function(y) y*0.3048),option = 'linear')
-ggplot_na_imputations(sapply(as.data.frame(swgaugeht[,11]), function(y) y*0.3048),imp,
-                      xlab = "Months",ylab = "Gauge height (m)",
-                      title = paste("Interpolated values in",colnames(swgaugeht)[11]))
+dat <- swgaugeht[,2]*0.3048
+dates = seq(from = as.Date("2000-01-01"), to = as.Date("2018-12-1"), by = 'month')
+imp <- na.interp(dat)
+x <- 2000 + (which(is.na(dat))-1)/12 
+y <- imp[which(is.na(dat))]
+
+dat.ts<-ts(dat,start=c(2000,1),end=c(2018,12),frequency = 12)
+ts.plot(dat.ts,gpars = list(xlab="Year",ylab="Water level (m)"),main = "Imputed values",
+        type="o",lwd=1,col="blue")
+points(x,y,col="red",pch=1,cex=1) 
+mtext(colnames(swgaugeht)[2])
+grid()
+
 ```
 ```{r,echo = FALSE}
 swgaugeht_m <- sapply(as.data.frame(sw_imputed), function(y) y*0.3048)
@@ -149,13 +167,13 @@ na_count <-sapply(prec, function(y) sum(length(which(is.na(y)))))
 ```
 ## Imputation of missing values and visualization of data
 
-Out of the 12 gauge stations, seven stations were selected based on the percentage of missing values. These time series were further used in linear interpolation.
+Out of the 12 gauge stations, seven stations were selected based on the percentage of missing values. Interpolation was carried out using na_interp to impute missing values.
 
 ```{r ,echo = FALSE, warning=FALSE}
 library(imputeTS)
 prec_imputed<-c()
 for(i in 1:ncol(prec)){
-        imp <- na.interpolation(prec[,i],option = 'linear')
+        imp <- na.interp(prec[,i])
         prec_imputed<-cbind(prec_imputed,imp)
 }
 
@@ -165,10 +183,18 @@ head(prec_imputed)
 ```
 Here is a plot of the points interpolated in one of the time series (units changed from inches to mm).
 ```{r ,echo = FALSE,fig.height=3,fig.width=6, warning=FALSE}
-imp <- na.interpolation(sapply(as.data.frame(prec[,1]), function(y) y*25.4),option = 'linear')
-ggplot_na_imputations(sapply(as.data.frame(prec[,1]), function(y) y*25.4),imp,
-                      xlab = "Months",ylab = "Precipitation (mm)",
-                      title = paste("Interpolated values in",colnames(prec_imputed)[1]))
+dat <- prec[,1]*25.4
+dates = seq(from = as.Date("2000-01-01"), to = as.Date("2018-12-1"), by = 'month')
+imp <- na.interp(dat)
+x <- 2000 + (which(is.na(dat))-1)/12 
+y <- imp[which(is.na(dat))]
+
+dat.ts<-ts(dat,start=c(2000,1),end=c(2018,12),frequency = 12)
+ts.plot(dat.ts,gpars = list(xlab="Year",ylab="Precipitation (mm)"),main = "Imputed values",
+        type="o",lwd=1,col="blue")
+points(x,y,col="red",pch=1,cex=1) 
+mtext(colnames(prec)[7])
+grid()
 
 ```
 ```{r,echo = FALSE}
@@ -219,3 +245,4 @@ ggplot(data = pmp_m2,aes(x = Date, y = Pumping)) +
 
 ```
 
+# References

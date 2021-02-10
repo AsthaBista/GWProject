@@ -1,12 +1,12 @@
 
 setwd("C:/Users/Aastha/Desktop/GWProject")
-list.of.packages <- c("ggplot2", "imputeTS","reshape2","dplyr")
+list.of.packages <- c("ggplot2", "imputeTS","reshape2","dplyr","forecast")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
 
 
 ## Read the data containing groundwater levels with missing values
-gwlevel <- read.csv(file ="GWLevel_with_missinggaps.csv",header = TRUE)
+gwlevel <- read.csv(file ="Data_Processing/GWLevel_with_missinggaps.csv",header = TRUE)
 head(gwlevel)
 
 ## Count the missing values
@@ -16,10 +16,11 @@ na_count
 ## Since the number of missing values is less than 10%, a linear interpolation was used
 ## Linear interpolation of each time series 
 library(imputeTS)
+library(forecast)
 
 gw_imputed<-c()
 for(i in 2:ncol(gwlevel)){
-        imp <- na.interpolation(gwlevel[,i],option = 'linear')
+        imp <- na.interp(gwlevel[,i])
         gw_imputed<-cbind(gw_imputed,imp)
 }
       
@@ -29,8 +30,22 @@ head(gw_imputed)
 write.csv(gw_imputed,"GWLevel_imputed.csv")
 
 # Visualize the imputed values in one of the groundwater wells
-imp <- na.interpolation(gwlevel[,10],option = 'linear')
-ggplot_na_imputations(gwlevel[,10],imp)
+
+dat <- gwlevel[,11]*0.3048
+dates = seq(from = as.Date("2000-01-01"), to = as.Date("2018-12-1"), by = 'month')
+imp <- na.interp(dat)
+x <- 2000 + (which(is.na(dat))-1)/12 
+y <- imp[which(is.na(dat))]
+
+dat.ts<-ts(dat,start=c(2000,1),end=c(2018,12),frequency = 12)
+ts.plot(dat.ts,gpars = list(xlab="Year",ylab="Water level (m)"),main = "Imputed values",
+        type="o",lwd=1.5,col="blue")
+points(x,y,col="red",pch=1,cex=1) 
+mtext(colnames(gwlevel)[11])
+grid()
+
+
+
 
 ##Plot groundwater wells
 ## For plotting, change feet to metres

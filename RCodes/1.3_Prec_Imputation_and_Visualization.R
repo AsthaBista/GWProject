@@ -6,7 +6,7 @@
 
 ## Setting up the project
 setwd("C:/Users/Aastha/Desktop/GWProject")
-list.of.packages <- c("ggplot2", "imputeTS","reshape2","dplyr")
+list.of.packages <- c("ggplot2", "forecast","reshape2","dplyr")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
 
@@ -20,10 +20,10 @@ na_count <-sapply(prec, function(y) sum(length(which(is.na(y)))))
 (na_count/nrow(prec))*100
 
 
-library(imputeTS)
+library(forecast)
 prec_imputed<-c()
 for(i in 1:ncol(prec)){
-        imp <- na.interpolation(prec[,i],option = 'linear')
+        imp <- na.interp(prec[,i])
         prec_imputed<-cbind(prec_imputed,imp)
 }
 
@@ -33,10 +33,19 @@ head(prec_imputed)
 write.csv(prec_imputed,"Precipitation_imputed.csv")
 
 # Visualize the imputed values in one of the precipitation stations (units changed from inches to mm)
-imp <- na.interpolation(sapply(as.data.frame(prec[,1]), function(y) y*25.4),option = 'linear')
-ggplot_na_imputations(sapply(as.data.frame(prec[,1]), function(y) y*25.4),imp,
-                      xlab = "Months",ylab = "Precipitation (mm)",
-                      title = paste("Interpolated values in",colnames(prec_imputed)[1]))
+dat <- prec[,1]*25.4
+dates = seq(from = as.Date("2000-01-01"), to = as.Date("2018-12-1"), by = 'month')
+imp <- na.interp(dat)
+x <- 2000 + (which(is.na(dat))-1)/12 
+y <- imp[which(is.na(dat))]
+
+dat.ts<-ts(dat,start=c(2000,1),end=c(2018,12),frequency = 12)
+ts.plot(dat.ts,gpars = list(xlab="Year",ylab="Precipitation (mm)"),main = "Imputed values",
+        type="o",lwd=1.5,col="blue")
+points(x,y,col="red",pch=1,cex=1) 
+mtext(colnames(prec)[7])
+grid()
+
 
 ## Plot precipitation
 ## For plotting, change feet to metres

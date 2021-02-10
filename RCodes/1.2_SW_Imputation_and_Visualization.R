@@ -6,7 +6,7 @@
 
 ## Setting up the project
 setwd("C:/Users/Aastha/Desktop/GWProject")
-list.of.packages <- c("ggplot2", "imputeTS","reshape2","dplyr")
+list.of.packages <- c("ggplot2", "forecast","reshape2","dplyr")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
 
@@ -21,10 +21,10 @@ na_count <-sapply(swgaugeht[,-1], function(y) sum(length(which(is.na(y)))))
 
 # Out of the 12 gauge stations, seven stations were selected based on the percentage of missing values. These time series were further used in linear interpolation.
 
-library(imputeTS)
+library(forecast)
 sw_imputed<-c()
 for(i in c(2,3,6,10,11,12,13)){
-        imp <- na.interpolation(swgaugeht[,i],option = 'linear')
+        imp <- na.interp(swgaugeht[,i])
         sw_imputed<-cbind(sw_imputed,imp)
 }
 
@@ -34,10 +34,18 @@ head(sw_imputed)
 write.csv(sw_imputed,"SW_imputed.csv")
 
 # Visualize the imputed values in one of the groundwater wells
-imp <- na.interpolation(sapply(as.data.frame(swgaugeht[,11]), function(y) y*0.3048),option = 'linear')
-ggplot_na_imputations(sapply(as.data.frame(swgaugeht[,11]), function(y) y*0.3048),imp,
-                      xlab = "Months",ylab = "Gauge height (m)",
-                      title = paste("Interpolated values in",colnames(swgaugeht)[11]))
+dat <- swgaugeht[,2]*0.3048
+dates = seq(from = as.Date("2000-01-01"), to = as.Date("2018-12-1"), by = 'month')
+imp <- na.interp(dat)
+x <- 2000 + (which(is.na(dat))-1)/12 
+y <- imp[which(is.na(dat))]
+
+dat.ts<-ts(dat,start=c(2000,1),end=c(2018,12),frequency = 12)
+ts.plot(dat.ts,gpars = list(xlab="Year",ylab="Water level (m)"),main = "Imputed values",
+        type="o",lwd=1.5,col="blue")
+points(x,y,col="red",pch=1,cex=1) 
+mtext(colnames(swgaugeht)[2])
+grid()
 
 ## Plot stream gauge height
 ## For plotting, change feet to metres

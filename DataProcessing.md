@@ -6,7 +6,7 @@ Groundwater levels were obtained from [United States Geological Survey
 Network](https://cida.usgs.gov/ngwmn/) for Platte River Basin in
 Nebraska from 2000 to 2018. 12 groundwater wells were selected based on
 data available, and screen depth. Read the data containing groundwater
-levels with missing values
+levels with missing values:
 
     ##         Date      W60      W63      W67      W70      W73      W74      W78
     ## 1 1-Jan-2000 2200.452 2282.330 2045.680 2396.298 2410.710 2479.669 1911.284
@@ -31,27 +31,36 @@ Count the missing values
 Imputation of missing values and visualization of data
 ------------------------------------------------------
 
-Since the number of missing values is less than 10%, a linear
-interpolation was used Linear interpolation of each time series:
+The missing values in the data are imputed using na\_interp command in
+forecast package(Hyndman et al. [2020](#ref-R-forecast)). In this
+command, for seasonal series, a robust STL decomposition is first
+computed. Then a linear interpolation is applied to the seasonally
+adjusted data, and the seasonal component is added back. Moritz et al.
+([2015](#ref-moritz2015comparison)) compared interpolation methods and
+found that this method gave the least error.
 
     ## Registered S3 method overwritten by 'quantmod':
     ##   method            from
     ##   as.zoo.data.frame zoo
 
-    ##           W60      W63      W67      W70      W73      W74      W78      W80
-    ## [1,] 2200.452 2282.330 2045.680 2396.298 2410.710 2479.669 1911.284 2541.000
-    ## [2,] 2200.377 2282.340 2045.752 2396.306 2410.502 2479.520 1911.228 2541.000
-    ## [3,] 2200.238 2282.334 2045.837 2396.404 2410.327 2479.101 1911.197 2541.000
-    ## [4,] 2200.110 2282.341 2045.960 2396.086 2410.142 2478.879 1911.148 2540.774
-    ## [5,] 2199.762 2282.123 2046.076 2395.895 2410.179 2478.191 1911.110 2540.548
-    ## [6,] 2199.552 2281.595 2045.607 2395.996 2410.572 2477.632 1910.794 2539.839
-    ##         W81     W115     W116     W118
-    ## [1,] 1932.0 1765.232 1667.225 1508.000
-    ## [2,] 1932.0 1765.202 1667.190 1507.862
-    ## [3,] 1932.0 1765.205 1667.298 1507.000
-    ## [4,] 1932.0 1765.192 1667.375 1507.000
-    ## [5,] 1932.0 1765.112 1667.318 1507.000
-    ## [6,] 1930.5 1765.068 1667.260 1506.871
+    ## Time Series:
+    ## Start = 1 
+    ## End = 6 
+    ## Frequency = 1 
+    ##        W60      W63      W67      W70      W73      W74      W78      W80
+    ## 1 2200.452 2282.330 2045.680 2396.298 2410.710 2479.669 1911.284 2541.000
+    ## 2 2200.377 2282.340 2045.752 2396.306 2410.502 2479.520 1911.228 2541.000
+    ## 3 2200.238 2282.334 2045.837 2396.404 2410.327 2479.101 1911.197 2541.000
+    ## 4 2200.110 2282.341 2045.960 2396.086 2410.142 2478.879 1911.148 2540.774
+    ## 5 2199.762 2282.123 2046.076 2395.895 2410.179 2478.191 1911.110 2540.548
+    ## 6 2199.552 2281.595 2045.607 2395.996 2410.572 2477.632 1910.794 2539.839
+    ##      W81     W115     W116     W118
+    ## 1 1932.0 1765.232 1667.225 1508.000
+    ## 2 1932.0 1765.202 1667.190 1507.862
+    ## 3 1932.0 1765.205 1667.298 1507.000
+    ## 4 1932.0 1765.192 1667.375 1507.000
+    ## 5 1932.0 1765.112 1667.318 1507.000
+    ## 6 1930.5 1765.068 1667.260 1506.871
 
 Here is a plot of the points interpolated in one of the time series.
 ![](DataProcessing_files/figure-markdown_strict/unnamed-chunk-3-1.png)
@@ -105,16 +114,20 @@ Imputation of missing values and visualization of data
 ------------------------------------------------------
 
 Out of the 12 gauge stations, seven stations were selected based on the
-percentage of missing values. These time series were further used in
-linear interpolation.
+percentage of missing values.Interpolation was carried out using
+na\_interp to impute missing values.
 
-    ##           G40      G42      G45      G49      G51      G53      G65
-    ## [1,] 3.938065 3.673333 4.130000 2.579355 4.456774 4.669355 4.177097
-    ## [2,] 3.950000 3.673333 4.120690 2.623103 4.493103 4.745769 4.182069
-    ## [3,] 3.872581 3.673333 3.939032 2.561290 4.521111 4.646452 4.227419
-    ## [4,] 3.892000 3.673333 3.678000 2.361000 4.496333 4.515000 4.302667
-    ## [5,] 4.330000 3.673333 3.471935 2.136129 4.428387 4.308710 4.159677
-    ## [6,] 4.515000 3.673333 3.262000 1.943333 4.157000 3.956667 4.114667
+    ## Time Series:
+    ## Start = 1 
+    ## End = 6 
+    ## Frequency = 1 
+    ##        G40      G42      G45      G49      G51      G53      G65
+    ## 1 3.938065 3.673333 4.130000 2.579355 4.456774 4.669355 4.177097
+    ## 2 3.950000 3.673333 4.120690 2.623103 4.493103 4.745769 4.182069
+    ## 3 3.872581 3.673333 3.939032 2.561290 4.521111 4.646452 4.227419
+    ## 4 3.892000 3.673333 3.678000 2.361000 4.496333 4.515000 4.302667
+    ## 5 4.330000 3.673333 3.471935 2.136129 4.428387 4.308710 4.159677
+    ## 6 4.515000 3.673333 3.262000 1.943333 4.157000 3.956667 4.114667
 
 Here is a plot of the points interpolated in one of the time series.
 ![](DataProcessing_files/figure-markdown_strict/unnamed-chunk-9-1.png)
@@ -182,16 +195,20 @@ Imputation of missing values and visualization of data
 ------------------------------------------------------
 
 Out of the 12 gauge stations, seven stations were selected based on the
-percentage of missing values. These time series were further used in
-linear interpolation.
+percentage of missing values. Interpolation was carried out using
+na\_interp to impute missing values.
 
-    ##        RV  CDY   KY   HY   GI   GS   GO   NP   DC
-    ## [1,] 0.41 1.39 0.53 0.17 0.25 0.18 0.16 0.12 0.10
-    ## [2,] 1.37 1.39 1.79 0.97 1.35 0.96 0.18 0.18 0.34
-    ## [3,] 1.07 1.62 2.19 1.61 1.32 1.33 0.65 0.46 0.58
-    ## [4,] 1.95 1.73 1.12 1.54 1.60 1.10 1.15 0.81 0.42
-    ## [5,] 1.81 1.60 2.68 0.39 2.19 2.61 0.76 0.52 1.07
-    ## [6,] 2.03 1.95 3.63 1.04 0.70 2.69 1.00 1.12 1.29
+    ## Time Series:
+    ## Start = 1 
+    ## End = 6 
+    ## Frequency = 1 
+    ##     RV  CDY   KY   HY   GI   GS   GO   NP   DC
+    ## 1 0.41 1.39 0.53 0.17 0.25 0.18 0.16 0.12 0.10
+    ## 2 1.37 1.39 1.79 0.97 1.35 0.96 0.18 0.18 0.34
+    ## 3 1.07 1.62 2.19 1.61 1.32 1.33 0.65 0.46 0.58
+    ## 4 1.95 1.73 1.12 1.54 1.60 1.10 1.15 0.81 0.42
+    ## 5 1.81 1.60 2.68 0.39 2.19 2.61 0.76 0.52 1.07
+    ## 6 2.03 1.95 3.63 1.04 0.70 2.69 1.00 1.12 1.29
 
 Here is a plot of the points interpolated in one of the time series
 (units changed from inches to mm).
@@ -219,3 +236,17 @@ reversed for purpose of comparison with water levels from other
 variables.
 
 ![](DataProcessing_files/figure-markdown_strict/unnamed-chunk-20-1.png)
+
+References
+==========
+
+Hyndman, Rob, George Athanasopoulos, Christoph Bergmeir, Gabriel
+Caceres, Leanne Chhay, Mitchell O’Hara-Wild, Fotios Petropoulos, Slava
+Razbash, Earo Wang, and Farah Yasmeen. 2020. *Forecast: Forecasting
+Functions for Time Series and Linear Models*.
+<https://CRAN.R-project.org/package=forecast>.
+
+Moritz, Steffen, Alexis Sardá, Thomas Bartz-Beielstein, Martin
+Zaefferer, and Jörg Stork. 2015. “Comparison of Different Methods for
+Univariate Time Series Imputation in R.” *arXiv Preprint
+arXiv:1510.03924*.

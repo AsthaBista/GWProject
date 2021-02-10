@@ -1,0 +1,14 @@
+---
+title: "temp"
+author: "Astha Bista"
+date: "2/10/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+knitr::write_bib(c("knitr", "rmarkdown","ggplot2", "forecast","reshape2","dplyr","forecast"), width = 60)
+```
