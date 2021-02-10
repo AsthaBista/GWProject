@@ -148,7 +148,7 @@ fviz_pca_var(res.pca, col.var="contrib")+
   scale_color_gradient2(low="white",mid="blue",high="red", midpoint=2.5)+theme_bw()
 ```
 
-### Output
+### PCA results
 The main output of PCA are PC scores and PC loadings.
 ```{r }
 loadings<-sweep(res.pca$var$coord,2,sqrt(res.pca$eig[1:ncol(res.pca$var$coord),1]),FUN="/")
@@ -174,14 +174,14 @@ selectedData
 ```
 
 Elbow method to find optimal number of clusters:
-```{r}
+```{r fig.height=3,fig.width=4}
 fviz_nbclust(selectedData, kmeans, method = "wss") +
   geom_vline(xintercept = 3, linetype = 2)+
   labs(subtitle = "Elbow method")
 ```
 
 Using heirarchical clustering:
-```{r}
+```{r fig.height=5,fig.width=7}
 distanceData = dist(selectedData, method="euclidean")
 hclustData<-hclust(distanceData,method="ward.D")
 plot(hclustData,main=" ",sub="Heirarchical clustering",xlab=" ")
@@ -198,7 +198,7 @@ ClusterData<-kmeansData$cluster
 ```
 
 Now, plotting loadings of PC1 against P2, PC2 against PC3, and PC3 against PC1
-```{r}
+```{r fig.height=7,fig.width=9}
 palette(c("maroon","blue","dark green"))
 plot(selectedData[,1],selectedData[,2],ylim=c(-0.3,0.6),xlim=c(-0.15,0.45),
      xlab="PC1",ylab="PC2",pch=19,cex=1,lty='solid',lwd=2,col= ClusterData)
@@ -208,7 +208,7 @@ legend('topright',legend=c("Group A","Group B","Group C"),col=c("maroon","blue",
 grid()
 ```
 
-```{r}
+```{r fig.height=7,fig.width=9}
 plot(selectedData[,2],selectedData[,3],ylim=c(-0.5,0.7),xlim=c(-0.3,0.6),
      xlab="PC2",ylab="PC3",pch=19,cex=1,lty='solid',lwd=2,col= ClusterData)
 text(selectedData[,c(2,3)],labels=rownames(selectedData),cex=1,pos=3,col= ClusterData)
@@ -216,7 +216,7 @@ legend('topright',legend=c("Group A","Group B","Group C"),col=c("maroon","blue",
        cex=1,bty="y")
 ```
 
-```{r}
+```{r fig.height=7,fig.width=9}
 plot(selectedData[,1],selectedData[,3],ylim=c(-0.5,0.6),xlim=c(-0.1,0.5),
      xlab="PC1",ylab="PC3",pch=19,cex=1,lty='solid',lwd=2,col= ClusterData)
 text(selectedData[,c(1,3)],labels=rownames(selectedData),cex=1,pos=3,col= ClusterData)

@@ -165,7 +165,7 @@ components.
 
 ![](Approach_I_Par1_files/figure-markdown_strict/unnamed-chunk-15-1.png)
 
-### Output
+### PCA results
 
 The main output of PCA are PC scores and PC loadings.
 
