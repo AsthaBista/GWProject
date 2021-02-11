@@ -359,7 +359,8 @@ tbl_df(All)
 ```
 
 Here, first two functions were created
-* FUnction to find maximum correlation
+
+* Function to find maximum correlation
 ```{r}
 Find_Max_CCF<- function(a,b)
 {
@@ -424,9 +425,10 @@ df2 <- new_df %>%
   unite(Var1,Var, Y) %>%                 #unite headings: e.g.Cor_G40,Months_G40
   pivot_wider(names_from = Var1, values_from = val)   #arrange dataframe in a wide form
 
-#Seoarate columns with correlation and months
+#Separate columns with correlation and months
 cor_df<-cbind(df2[,1],round(df2[,2:18],3))
 mth_df<-df2[,19:35]
+
 #arrange the order
 neworder <- order(c(2*(seq_along(cor_df[,-1]) - 1) + 1,
                     2*seq_along(mth_df)))
@@ -441,7 +443,7 @@ df4<-df3 %>%
   select(Wells, Group, Cor_G40:Months_Pu) %>%
   group_by(Group) %>%
   arrange(Group)
-head(df4)
+df4
 ```
 
 

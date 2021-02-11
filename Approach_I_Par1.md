@@ -416,8 +416,11 @@ Preparing the data:
     ## #   G53 <dbl>, G65 <dbl>, RV <dbl>, CDY <dbl>, KY <dbl>, HY <dbl>, GI <dbl>,
     ## #   GS <dbl>, GO <dbl>, NP <dbl>, DC <dbl>, Pu <dbl>
 
-Here, first two functions were created \* FUnction to find maximum
-correlation
+Here, first two functions were created
+
+-   Function to find maximum correlation
+
+<!-- -->
 
     Find_Max_CCF<- function(a,b)
     {
@@ -498,9 +501,10 @@ Now, we need to arrange this table in a presentable form.
       unite(Var1,Var, Y) %>%                 #unite headings: e.g.Cor_G40,Months_G40
       pivot_wider(names_from = Var1, values_from = val)   #arrange dataframe in a wide form
 
-    #Seoarate columns with correlation and months
+    #Separate columns with correlation and months
     cor_df<-cbind(df2[,1],round(df2[,2:18],3))
     mth_df<-df2[,19:35]
+
     #arrange the order
     neworder <- order(c(2*(seq_along(cor_df[,-1]) - 1) + 1,
                         2*seq_along(mth_df)))
@@ -515,18 +519,24 @@ Now, we need to arrange this table in a presentable form.
       select(Wells, Group, Cor_G40:Months_Pu) %>%
       group_by(Group) %>%
       arrange(Group)
-    head(df4)
+    df4
 
-    ## # A tibble: 6 x 36
-    ## # Groups:   Group [2]
-    ##   Wells Group Cor_G40 Months_G40 Cor_G42 Months_G42 Cor_G45 Months_G45 Cor_G49
-    ##   <fct> <chr>   <dbl>      <dbl>   <dbl>      <dbl>   <dbl>      <dbl>   <dbl>
-    ## 1 W63   Grou~   0.308      -14.0   0.265          1   0.351          1   0.345
-    ## 2 W67   Grou~   0.262      -13     0.182          1   0.259          1   0.321
-    ## 3 W78   Grou~   0.293      -13     0.175          1   0.24           1   0.336
-    ## 4 W81   Grou~   0.278      -14.0   0.189          1   0.268          1   0.284
-    ## 5 W116  Grou~   0.349      -13     0.178          1   0.232        -19   0.278
-    ## 6 W60   Grou~   0.186        0     0.785          0   0.912          0   0.771
+    ## # A tibble: 12 x 36
+    ## # Groups:   Group [3]
+    ##    Wells Group Cor_G40 Months_G40 Cor_G42 Months_G42 Cor_G45 Months_G45 Cor_G49
+    ##    <fct> <chr>   <dbl>      <dbl>   <dbl>      <dbl>   <dbl>      <dbl>   <dbl>
+    ##  1 W63   Grou~   0.308      -14.0   0.265          1   0.351          1   0.345
+    ##  2 W67   Grou~   0.262      -13     0.182          1   0.259          1   0.321
+    ##  3 W78   Grou~   0.293      -13     0.175          1   0.24           1   0.336
+    ##  4 W81   Grou~   0.278      -14.0   0.189          1   0.268          1   0.284
+    ##  5 W116  Grou~   0.349      -13     0.178          1   0.232        -19   0.278
+    ##  6 W60   Grou~   0.186        0     0.785          0   0.912          0   0.771
+    ##  7 W74   Grou~   0.21        10     0.672          0   0.72           0   0.589
+    ##  8 W80   Grou~   0.219       -2     0.386          0   0.46           0   0.369
+    ##  9 W70   Grou~   0.341        0     0.17         -19   0.169        -19   0.208
+    ## 10 W73   Grou~   0.290        1     0.161         20   0.17          18   0.16 
+    ## 11 W115  Grou~   0.228        1     0.179        -19   0.22         -19   0.224
+    ## 12 W118  Grou~   0.293        1     0.147          6   0.232         -5   0.262
     ## # ... with 27 more variables: Months_G49 <dbl>, Cor_G51 <dbl>,
     ## #   Months_G51 <dbl>, Cor_G53 <dbl>, Months_G53 <dbl>, Cor_G65 <dbl>,
     ## #   Months_G65 <dbl>, Cor_RV <dbl>, Months_RV <dbl>, Cor_CDY <dbl>,
