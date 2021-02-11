@@ -147,7 +147,7 @@ ts.plot(pc3.ts,w70.ts,w73.ts,w115.ts,
 
 abline(v=seq(2000,2019,1),lty = 6, col = "cornsilk2")
 grid (NA,NULL, lty = 6, col = "cornsilk2")
-legend('topleft',horiz = TRUE,legend=c("PC2","W70","W73","W115"),
+legend('topleft',horiz = TRUE,legend=c("PC3","W70","W73","W115"),
        col=c("red","gray","gold4","darkseagreen"),lwd=c(2,2,2,2),lty=c(1,1,1,1),cex=1.5,bty="y")
 text(2011,5.5,"PC3 with Group C wells",cex=1.5,bty="n",font=1)
 axis(2,cex.axis=1.2)

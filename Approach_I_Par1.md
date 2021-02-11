@@ -249,7 +249,7 @@ Using k-means clustering:
 Now, plotting loadings of PC1 against P2, PC2 against PC3, and PC3
 against PC1
 
-    palette(c("maroon","blue","dark green"))
+    palette(c("maroon","dark green","blue"))
     plot(selectedData[,1],selectedData[,2],ylim=c(-0.3,0.6),xlim=c(-0.15,0.45),
          xlab="PC1",ylab="PC2",pch=19,cex=1,lty='solid',lwd=2,col= ClusterData)
     text(selectedData[,c(1,2)],labels=rownames(selectedData),cex=1,pos=3,col= ClusterData)
@@ -405,7 +405,7 @@ respective PC.
 
     abline(v=seq(2000,2019,1),lty = 6, col = "cornsilk2")
     grid (NA,NULL, lty = 6, col = "cornsilk2")
-    legend('topleft',horiz = TRUE,legend=c("PC2","W70","W73","W115"),
+    legend('topleft',horiz = TRUE,legend=c("PC3","W70","W73","W115"),
            col=c("red","gray","gold4","darkseagreen"),lwd=c(2,2,2,2),lty=c(1,1,1,1),cex=1.5,bty="y")
     text(2016,5.5,"PC3 with Group C wells",cex=1.5,bty="n",font=1)
     axis(2,cex.axis=1.2)

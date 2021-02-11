@@ -45,7 +45,7 @@ ClusterData<-kmeansData$cluster
 
 #Plot loadings of PC1 and PC2
 png(file = 'Approach_I/PC1-PC2.png')
-palette(c("maroon","blue","dark green"))
+palette(c("maroon","dark green","blue"))
 plot(selectedData[,1],selectedData[,2],ylim=c(-0.3,0.6),xlim=c(-0.15,0.45),
      xlab="PC1",ylab="PC2",pch=19,cex=1,lty='solid',lwd=2,col= ClusterData)
 text(selectedData[,c(1,2)],labels=rownames(selectedData),cex=1,pos=3,col= ClusterData)
@@ -73,7 +73,7 @@ legend('topright',legend=c("Group A","Group B","Group C"),col=c("red","blue","da
 dev.off()
 
 #For 3d viewing of clusters
-palette(c("red","blue","dark green","brown","dark green"))
+palette(c("red","dark green","blue"))
 plot3d(selectedData, col= ClusterData, pch=16,xlab = "PC1",ylab = "PC2",zlab = "PC3")
 with(selectedData, text3d(selectedData, texts = row.names(selectedData),col = ClusterData))
 dev.off()
