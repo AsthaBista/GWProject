@@ -3,30 +3,6 @@ component analysis, cluster analysis, and cross correlation between
 variables. The data used were first made stationary by using first
 degree differencing.
 
-Before beginning, here is a function to plot many time series using
-ggplot.We will be using this function in the following lines to plot
-stationary time series.
-
-    create_timeseries_plots <- function(df){
-      # change into metres
-      df <- sapply(as.data.frame(df), function(y) y*0.3048)
-      # column with dates
-      dates = seq(from = as.Date("2000-02-01"), to = as.Date("2018-12-1"), by = 'month') 
-      # add date column to dataframe
-      df_m <- data.frame(as.data.frame(df[,-1]),dates)
-      colnames(df_m)[ncol(df_m)]<-"Date"
-      # Rearrange dataframe to long form
-      df_m2 <- melt(df_m, id.vars = "Date", 
-                    variable.name = "Var", value.name="Val")
-      # Group the dataframe
-      df_m3 <- df_m2%>%
-        group_by(Date,Var)
-      #Plot using ggplot2
-      ggplot(data = df_m3,aes(x = Date, y = Val)) + 
-        geom_line() + facet_wrap(~ Var, nrow = 6, scales = "free") +
-        xlab("Year") + ylab("Units(m)") + theme_bw()
-    }
-
 Converting time series to stationary
 ====================================
 
@@ -60,6 +36,30 @@ stream stage, precipitation, and pumping. Below is the plot showing the
 stationary time series. Please note that the units are differences of
 water levels between a month and preceding month, therefore the negative
 values in some cases.
+
+Here is a function to plot many time series using ggplot.We will be
+using this function in the following lines to plot stationary time
+series.
+
+    create_timeseries_plots <- function(df){
+      # change into metres
+      df <- sapply(as.data.frame(df), function(y) y*0.3048)
+      # column with dates
+      dates = seq(from = as.Date("2000-02-01"), to = as.Date("2018-12-1"), by = 'month') 
+      # add date column to dataframe
+      df_m <- data.frame(as.data.frame(df[,-1]),dates)
+      colnames(df_m)[ncol(df_m)]<-"Date"
+      # Rearrange dataframe to long form
+      df_m2 <- melt(df_m, id.vars = "Date", 
+                    variable.name = "Var", value.name="Val")
+      # Group the dataframe
+      df_m3 <- df_m2%>%
+        group_by(Date,Var)
+      #Plot using ggplot2
+      ggplot(data = df_m3,aes(x = Date, y = Val)) + 
+        geom_line() + facet_wrap(~ Var, nrow = 6, scales = "free") +
+        xlab("Year") + ylab("Units(m)") + theme_bw()
+    }
 
     create_timeseries_plots(diff_gw)
 
