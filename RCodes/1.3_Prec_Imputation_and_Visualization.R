@@ -30,7 +30,7 @@ for(i in 1:ncol(prec)){
 colnames(prec_imputed)<-c("RV","CDY","KY","HY","GI","GS","GO","NP","DC")
 
 head(prec_imputed)
-write.csv(prec_imputed,"Precipitation_imputed.csv")
+write.csv(prec_imputed,"Data_Processing/Precipitation_imputed.csv")
 
 # Visualize the imputed values in one of the precipitation stations (units changed from inches to mm)
 dat <- prec[,1]*25.4

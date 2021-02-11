@@ -31,7 +31,7 @@ for(i in c(2,3,6,10,11,12,13)){
 colnames(sw_imputed)<-c("G40","G42","G45","G49","G51","G53","G65")
 
 head(sw_imputed)
-write.csv(sw_imputed,"SW_imputed.csv")
+write.csv(sw_imputed,"Data_Processing/SW_imputed.csv")
 
 # Visualize the imputed values in one of the groundwater wells
 dat <- swgaugeht[,2]*0.3048

@@ -14,9 +14,6 @@ stationary time series.
       # add date column to dataframe
       df_m <- data.frame(as.data.frame(df[,-1]),dates)
       colnames(df_m)[ncol(df_m)]<-"Date"
-      library(reshape2)
-      library(ggplot2)
-      library(dplyr)
       # Rearrange dataframe to long form
       df_m2 <- melt(df_m, id.vars = "Date", 
                     variable.name = "Var", value.name="Val")
@@ -64,17 +61,6 @@ water levels between a month and preceding month, therefore the negative
 values in some cases.
 
     create_timeseries_plots(diff_gw)
-
-    ## 
-    ## Attaching package: 'dplyr'
-
-    ## The following objects are masked from 'package:stats':
-    ## 
-    ##     filter, lag
-
-    ## The following objects are masked from 'package:base':
-    ## 
-    ##     intersect, setdiff, setequal, union
 
 ![](Approach_I_Par1_files/figure-markdown_strict/unnamed-chunk-5-1.png)
 
@@ -284,9 +270,6 @@ transformed into time series form.
 
     Scores <- read.csv(file = "Approach_I/PC_scores.csv",header = T)[-1]
     W <- scale(read.csv("Approach_I/GWLevels_stationary.csv", sep=","))
-    S <- scale(read.csv("Approach_I/SW_stationary.csv", sep=","))
-    P <- scale(read.csv("Approach_I/Precipitation_stationary.csv", sep=","))
-    Pu <- read.csv("Approach_I/Pumping_stationary.csv", sep=",")
 
     #PC time series
     pc1.ts<-ts(Scores[,1],start=c(2000,1),end=c(2018,12),frequency = 12)
@@ -306,29 +289,6 @@ transformed into time series form.
     w115.ts<-ts(W[,11],start=c(2000,1),end=c(2018,12),frequency = 12) 
     w116.ts<-ts(W[,12],start=c(2000,1),end=c(2018,12),frequency = 12) 
     w118.ts<-ts(W[,13],start=c(2000,1),end=c(2018,12),frequency = 12) 
-
-    #Streams time series
-    g40.ts<-ts(S[,2],start=c(2000,1),end=c(2018,12),frequency = 12)
-    g42.ts<-ts(S[,3],start=c(2000,1),end=c(2018,12),frequency = 12)
-    g45.ts<-ts(S[,4],start=c(2000,1),end=c(2018,12),frequency = 12)
-    g49.ts<-ts(S[,5],start=c(2000,1),end=c(2018,12),frequency = 12)
-    g51.ts<-ts(S[,6],start=c(2000,1),end=c(2018,12),frequency = 12)
-    g53.ts<-ts(S[,7],start=c(2000,1),end=c(2018,12),frequency = 12)
-    g65.ts<-ts(S[,8],start=c(2000,1),end=c(2018,12),frequency = 12)
-
-    #Precipitation time series
-    rv.ts<-ts(P[,2],start=c(2000,1),end=c(2018,12),frequency = 12)
-    cdy.ts<-ts(P[,3],start=c(2000,1),end=c(2018,12),frequency = 12)
-    ky.ts<-ts(P[,4],start=c(2000,1),end=c(2018,12),frequency = 12)
-    hy.ts<-ts(P[,5],start=c(2000,1),end=c(2018,12),frequency = 12)
-    gi.ts<-ts(P[,6],start=c(2000,1),end=c(2018,12),frequency = 12)
-    gs.ts<-ts(P[,7],start=c(2000,1),end=c(2018,12),frequency = 12)
-    go.ts<-ts(P[,8],start=c(2000,1),end=c(2018,12),frequency = 12)
-    np.ts<-ts(P[,9],start=c(2000,1),end=c(2018,12),frequency = 12)
-    dc.ts<-ts(P[,10],start=c(2000,1),end=c(2018,12),frequency = 12)
-
-    #Pumping time series
-    pum.ts<-ts(Pu[,2],start=c(2000,1),end=c(2013,12),frequency = 12)
 
 Here is a plot showing the PC scores:
 
@@ -418,6 +378,262 @@ respective PC.
     mtext("Year",side = 1,outer = TRUE,line = 2,cex = 1)
 
 ![](Approach_I_Par1_files/figure-markdown_strict/unnamed-chunk-29-1.png)
+\# Cross correlation of variables For calculating cross correlation,
+ccf() from tseries package (Trapletti and Hornik [2019](#ref-R-tseries))
+was used. This function computes the sample crosscorrelation
+(covariance) function of x and y up to lag lag. If pl is TRUE, then the
+crosscorrelation (covariance) function is plotted. For the
+crosscorrelation function also the 95% confidence bounds for strict
+white noise are plotted. Uses fft for efficiency reasons.
+
+Preparing the data:
+
+    W <- read.csv("Approach_I/GWLevels_stationary.csv", sep=",")[-1]
+    S <- read.csv("Approach_I/SW_stationary.csv", sep=",")[-1]
+    P <- read.csv("Approach_I/Precipitation_stationary.csv", sep=",")[-1]
+    Pu <- -read.csv("Data_Processing/Pumping.csv", sep=",")[-1]
+
+    #Combining all variables together
+    All <- data.frame(W,S,P)
+    All$Pu <- c(unlist(Pu),rep(NA, nrow(All)-nrow(Pu)))
+    tbl_df(All)
+
+    ## # A tibble: 227 x 29
+    ##         W60      W63     W67      W70     W73     W74     W78    W80    W81
+    ##       <dbl>    <dbl>   <dbl>    <dbl>   <dbl>   <dbl>   <dbl>  <dbl>  <dbl>
+    ##  1 -0.0749   0.0100   0.0724  0.00836 -0.208  -0.149  -0.0568  0      0    
+    ##  2 -0.139   -0.00628  0.0848  0.0985  -0.175  -0.419  -0.0307  0      0    
+    ##  3 -0.128    0.00691  0.123  -0.318   -0.184  -0.222  -0.0485 -0.226  0    
+    ##  4 -0.348   -0.218    0.116  -0.191    0.0368 -0.688  -0.0387 -0.226  0    
+    ##  5 -0.211   -0.528   -0.469   0.101    0.393  -0.559  -0.316  -0.710 -1.5  
+    ##  6 -0.0985  -0.884   -2.69    1.17    -0.283   0.236  -1.10    1.29  -6.17 
+    ##  7 -0.244   -1.62    -1.47    0.756    0.901  -0.302  -0.607  -0.673 -2.33 
+    ##  8  0.00396  0.00615 -0.652  -1.17     0.603   0.0795 -0.630  -1.28   0.967
+    ##  9 -0.00708  0.124    0.261  -0.824   -0.809   0.116  -0.129   0.177  0.315
+    ## 10  0.449    0.162    0.0490  0.00219 -0.294   0.367  -0.141   1.69   0.519
+    ## # ... with 217 more rows, and 20 more variables: W115 <dbl>, W116 <dbl>,
+    ## #   W118 <dbl>, G40 <dbl>, G42 <dbl>, G45 <dbl>, G49 <dbl>, G51 <dbl>,
+    ## #   G53 <dbl>, G65 <dbl>, RV <dbl>, CDY <dbl>, KY <dbl>, HY <dbl>, GI <dbl>,
+    ## #   GS <dbl>, GO <dbl>, NP <dbl>, DC <dbl>, Pu <dbl>
+
+    round(cor(All, use="complete.obs"),2)
+
+    ##        W60   W63   W67   W70   W73   W74   W78   W80   W81  W115  W116  W118
+    ## W60   1.00  0.15  0.17  0.19  0.00  0.64  0.07  0.46  0.17 -0.03  0.10 -0.08
+    ## W63   0.15  1.00  0.82  0.04  0.23  0.02  0.62  0.14  0.76  0.23  0.69 -0.17
+    ## W67   0.17  0.82  1.00  0.03  0.21  0.03  0.81  0.11  0.76  0.27  0.71 -0.09
+    ## W70   0.19  0.04  0.03  1.00  0.34  0.24  0.10  0.41 -0.05  0.35  0.24  0.41
+    ## W73   0.00  0.23  0.21  0.34  1.00 -0.06  0.17 -0.04  0.22  0.47  0.21  0.25
+    ## W74   0.64  0.02  0.03  0.24 -0.06  1.00 -0.06  0.41  0.04 -0.10  0.05 -0.06
+    ## W78   0.07  0.62  0.81  0.10  0.17 -0.06  1.00  0.14  0.52  0.40  0.67  0.08
+    ## W80   0.46  0.14  0.11  0.41 -0.04  0.41  0.14  1.00  0.07  0.12  0.15 -0.05
+    ## W81   0.17  0.76  0.76 -0.05  0.22  0.04  0.52  0.07  1.00  0.23  0.58 -0.24
+    ## W115 -0.03  0.23  0.27  0.35  0.47 -0.10  0.40  0.12  0.23  1.00  0.30  0.29
+    ## W116  0.10  0.69  0.71  0.24  0.21  0.05  0.67  0.15  0.58  0.30  1.00 -0.10
+    ## W118 -0.08 -0.17 -0.09  0.41  0.25 -0.06  0.08 -0.05 -0.24  0.29 -0.10  1.00
+    ## G40   0.19  0.07  0.14  0.30  0.16 -0.02  0.14  0.13  0.06  0.16  0.21  0.18
+    ## G42   0.65  0.10  0.07  0.07 -0.03  0.59 -0.02  0.31  0.06 -0.05  0.03 -0.14
+    ## G45   0.87  0.17  0.14  0.16  0.00  0.59  0.03  0.42  0.18 -0.06  0.12 -0.13
+    ## G49   0.64  0.30  0.22  0.07  0.09  0.40  0.03  0.24  0.27 -0.07  0.21 -0.26
+    ## G51   0.18  0.45  0.48  0.25  0.13  0.25  0.31  0.30  0.53  0.36  0.61 -0.14
+    ## G53   0.44  0.47  0.42  0.14  0.01  0.28  0.30  0.26  0.38  0.01  0.43 -0.17
+    ## G65   0.29  0.34  0.32  0.20  0.20  0.34  0.23  0.25  0.41  0.34  0.50 -0.10
+    ## RV    0.11 -0.02 -0.01  0.11  0.08  0.24 -0.09  0.19  0.01  0.05  0.01 -0.02
+    ## CDY   0.19 -0.02 -0.04  0.17  0.09  0.16 -0.05  0.26 -0.07  0.20 -0.01  0.03
+    ## KY    0.11 -0.05 -0.05  0.14  0.05  0.14 -0.04  0.16 -0.02  0.09  0.02 -0.03
+    ## HY    0.10  0.08  0.05  0.08  0.03  0.14  0.04  0.04 -0.05  0.11  0.06  0.01
+    ## GI    0.00  0.01 -0.08  0.17  0.07  0.14 -0.10  0.14 -0.01  0.21  0.10 -0.01
+    ## GS    0.05 -0.05  0.00  0.22  0.19  0.06 -0.04  0.15 -0.02  0.04  0.02  0.04
+    ## GO    0.03 -0.02 -0.10  0.10 -0.05  0.04 -0.10  0.09 -0.04  0.07  0.03 -0.03
+    ## NP   -0.02 -0.02  0.00 -0.04  0.02  0.07 -0.01 -0.04  0.05  0.03  0.00 -0.11
+    ## DC   -0.10 -0.03 -0.07  0.17  0.20  0.02 -0.02  0.09 -0.12  0.20  0.07  0.06
+    ## Pu   -0.02  0.35  0.49  0.25 -0.04 -0.01  0.62  0.23  0.24  0.23  0.54  0.11
+    ##        G40   G42   G45   G49   G51   G53   G65    RV   CDY    KY    HY    GI
+    ## W60   0.19  0.65  0.87  0.64  0.18  0.44  0.29  0.11  0.19  0.11  0.10  0.00
+    ## W63   0.07  0.10  0.17  0.30  0.45  0.47  0.34 -0.02 -0.02 -0.05  0.08  0.01
+    ## W67   0.14  0.07  0.14  0.22  0.48  0.42  0.32 -0.01 -0.04 -0.05  0.05 -0.08
+    ## W70   0.30  0.07  0.16  0.07  0.25  0.14  0.20  0.11  0.17  0.14  0.08  0.17
+    ## W73   0.16 -0.03  0.00  0.09  0.13  0.01  0.20  0.08  0.09  0.05  0.03  0.07
+    ## W74  -0.02  0.59  0.59  0.40  0.25  0.28  0.34  0.24  0.16  0.14  0.14  0.14
+    ## W78   0.14 -0.02  0.03  0.03  0.31  0.30  0.23 -0.09 -0.05 -0.04  0.04 -0.10
+    ## W80   0.13  0.31  0.42  0.24  0.30  0.26  0.25  0.19  0.26  0.16  0.04  0.14
+    ## W81   0.06  0.06  0.18  0.27  0.53  0.38  0.41  0.01 -0.07 -0.02 -0.05 -0.01
+    ## W115  0.16 -0.05 -0.06 -0.07  0.36  0.01  0.34  0.05  0.20  0.09  0.11  0.21
+    ## W116  0.21  0.03  0.12  0.21  0.61  0.43  0.50  0.01 -0.01  0.02  0.06  0.10
+    ## W118  0.18 -0.14 -0.13 -0.26 -0.14 -0.17 -0.10 -0.02  0.03 -0.03  0.01 -0.01
+    ## G40   1.00  0.10  0.22  0.21  0.16  0.21  0.15  0.18  0.23  0.12  0.14  0.18
+    ## G42   0.10  1.00  0.74  0.56  0.20  0.37  0.21  0.18  0.17  0.14  0.13  0.12
+    ## G45   0.22  0.74  1.00  0.71  0.27  0.46  0.33  0.16  0.17  0.15  0.05  0.11
+    ## G49   0.21  0.56  0.71  1.00  0.29  0.65  0.33  0.11  0.07  0.11  0.04  0.12
+    ## G51   0.16  0.20  0.27  0.29  1.00  0.37  0.65  0.24  0.19  0.30  0.17  0.32
+    ## G53   0.21  0.37  0.46  0.65  0.37  1.00  0.35  0.11  0.01  0.02  0.06  0.09
+    ## G65   0.15  0.21  0.33  0.33  0.65  0.35  1.00  0.29  0.34  0.32  0.22  0.39
+    ## RV    0.18  0.18  0.16  0.11  0.24  0.11  0.29  1.00  0.73  0.74  0.51  0.70
+    ## CDY   0.23  0.17  0.17  0.07  0.19  0.01  0.34  0.73  1.00  0.77  0.68  0.63
+    ## KY    0.12  0.14  0.15  0.11  0.30  0.02  0.32  0.74  0.77  1.00  0.56  0.73
+    ## HY    0.14  0.13  0.05  0.04  0.17  0.06  0.22  0.51  0.68  0.56  1.00  0.44
+    ## GI    0.18  0.12  0.11  0.12  0.32  0.09  0.39  0.70  0.63  0.73  0.44  1.00
+    ## GS    0.17  0.02  0.07  0.06  0.16  0.03  0.32  0.58  0.60  0.65  0.33  0.52
+    ## GO    0.26  0.11  0.07 -0.01  0.17  0.00  0.22  0.50  0.55  0.52  0.52  0.57
+    ## NP    0.03  0.05 -0.05 -0.02  0.16 -0.06  0.18  0.43  0.45  0.50  0.50  0.42
+    ## DC    0.20 -0.03 -0.03  0.00  0.16  0.04  0.34  0.45  0.50  0.52  0.40  0.57
+    ## Pu    0.30 -0.06 -0.06 -0.05  0.25  0.27  0.09 -0.04 -0.04 -0.05  0.10  0.03
+    ##         GS    GO    NP    DC    Pu
+    ## W60   0.05  0.03 -0.02 -0.10 -0.02
+    ## W63  -0.05 -0.02 -0.02 -0.03  0.35
+    ## W67   0.00 -0.10  0.00 -0.07  0.49
+    ## W70   0.22  0.10 -0.04  0.17  0.25
+    ## W73   0.19 -0.05  0.02  0.20 -0.04
+    ## W74   0.06  0.04  0.07  0.02 -0.01
+    ## W78  -0.04 -0.10 -0.01 -0.02  0.62
+    ## W80   0.15  0.09 -0.04  0.09  0.23
+    ## W81  -0.02 -0.04  0.05 -0.12  0.24
+    ## W115  0.04  0.07  0.03  0.20  0.23
+    ## W116  0.02  0.03  0.00  0.07  0.54
+    ## W118  0.04 -0.03 -0.11  0.06  0.11
+    ## G40   0.17  0.26  0.03  0.20  0.30
+    ## G42   0.02  0.11  0.05 -0.03 -0.06
+    ## G45   0.07  0.07 -0.05 -0.03 -0.06
+    ## G49   0.06 -0.01 -0.02  0.00 -0.05
+    ## G51   0.16  0.17  0.16  0.16  0.25
+    ## G53   0.03  0.00 -0.06  0.04  0.27
+    ## G65   0.32  0.22  0.18  0.34  0.09
+    ## RV    0.58  0.50  0.43  0.45 -0.04
+    ## CDY   0.60  0.55  0.45  0.50 -0.04
+    ## KY    0.65  0.52  0.50  0.52 -0.05
+    ## HY    0.33  0.52  0.50  0.40  0.10
+    ## GI    0.52  0.57  0.42  0.57  0.03
+    ## GS    1.00  0.24  0.22  0.69 -0.10
+    ## GO    0.24  1.00  0.58  0.33  0.06
+    ## NP    0.22  0.58  1.00  0.28  0.02
+    ## DC    0.69  0.33  0.28  1.00 -0.02
+    ## Pu   -0.10  0.06  0.02 -0.02  1.00
+
+Here, first two functions were created \* FUnction to find maximum
+correlation
+
+    Find_Max_CCF<- function(a,b)
+    {
+      d <- ccf(a, b, plot = FALSE,na.action = na.contiguous)
+      cor = d$acf[,,1]
+      lag = d$lag[,,1]
+      res = data.frame(cor,lag)
+      res_max = res[which.max(res$cor),]
+      return(res_max)
+    } 
+
+-   Function to determine crosscorrelations for each pair of variables
+
+<!-- -->
+
+    Create_crosscorrelation_table<- function(df)
+    {
+      col<-colnames(df)
+      addData<-as.data.frame(matrix(NA, ncol = 2, nrow = (ncol(All))^2 - ncol(All)))
+      varnames<-data.frame()
+      rownumber=1
+      #Loop for selecting the first variable
+      for(i in 1:ncol(df)){
+        #Build time series of first variable
+        a.ts<-ts(df[,i],start=c(2000,1),end=c(2018,12),frequency = 12) 
+        #Loop around for selecting the second variable
+        for(j in 1:ncol(df)){
+          if(i!=j){             #removing selecting same variable  
+            #build time series of second variable
+            b.ts<-ts(df[,j],start=c(2000,1),end=c(2018,12),frequency = 12)
+            #use given function to find the maximum correlation and its lag
+            ccfmax<-Find_Max_CCF(a.ts,b.ts)
+            addData[rownumber,1]<-ccfmax[1]  #add correlation value to first column
+            addData[rownumber,2]<-ccfmax[2]  #add lag to second column
+            varnames[rownumber,1]<-col[i]    #add first variable name to first column
+            varnames[rownumber,2]<-col[j]    #add second variable name to second column
+            rownumber<-rownumber+1   
+          }
+        }
+      }
+      new_df<-data.frame(varnames,addData)   #Combine names dataframe and values dataframe
+      new_df$Days<-new_df[,4]*12             #Convert lag to months
+      colnames(new_df)<-c("Var1","Var2","Cor","Lag","Months")
+      return(new_df)
+    } 
+
+Now, using the above function in our data.
+
+    new_df <- Create_crosscorrelation_table(All)
+
+Now, we need to arrange this table in a presentable form.
+
+    ## Arrange table in a horizontal form
+    tbl_df(new_df)
+
+    ## # A tibble: 812 x 5
+    ##    Var1  Var2    Cor     Lag Months
+    ##    <chr> <chr> <dbl>   <dbl>  <dbl>
+    ##  1 W60   W63   0.327 -0.0833     -1
+    ##  2 W60   W67   0.241 -0.0833     -1
+    ##  3 W60   W70   0.175  1.58       19
+    ##  4 W60   W73   0.146  1.42       17
+    ##  5 W60   W74   0.761  0           0
+    ##  6 W60   W78   0.236 -0.0833     -1
+    ##  7 W60   W80   0.480  0           0
+    ##  8 W60   W81   0.251 -0.0833     -1
+    ##  9 W60   W115  0.225  1.58       19
+    ## 10 W60   W116  0.222 -0.0833     -1
+    ## # ... with 802 more rows
+
+    new_df<- new_df[,c(1,2,3,5)]
+    colnames(new_df)<- c("X","Y","Cor","Months")
+
+    df2 <- new_df %>%
+      filter(grepl("W",X)) %>%        #select only wells in first column
+      filter(!grepl("W",Y)) %>%       #select other variables in second column
+      gather(Var, val, c(Cor, Months)) %>%   #arrange dataframe in a long form
+      unite(Var1,Var, Y) %>%                 #unite headings: e.g.Cor_G40,Months_G40
+      pivot_wider(names_from = Var1, values_from = val)   #arrange dataframe in a wide form
+
+    #Seoarate columns with correlation and months
+    cor_df<-cbind(df2[,1],round(df2[,2:18],3))
+    mth_df<-df2[,19:35]
+    #arrange the order
+    neworder <- order(c(2*(seq_along(cor_df[,-1]) - 1) + 1,
+                        2*seq_along(mth_df)))
+    df3<-cbind(Wells = cor_df[,1],cbind(cor_df[,-1], mth_df)[,neworder])
+    colnames(df3)[1] <- "Wells"
+
+    #Group the wells into three groups
+    df4<-df3 %>%
+      mutate(Group = ifelse(grepl("W63|W67|W78|W81|W116",Wells),"Group A",
+                                   ifelse(grepl("W60|W74|W80",Wells),"Group B",
+                                          ifelse(grepl("W70|W73|W115|W118",Wells),"Group C","None")))) %>%
+      select(Wells, Group, Cor_G40:Months_Pu) %>%
+      group_by(Group) %>%
+      arrange(Group)
+    df4
+
+    ## # A tibble: 12 x 36
+    ## # Groups:   Group [3]
+    ##    Wells Group Cor_G40 Months_G40 Cor_G42 Months_G42 Cor_G45 Months_G45 Cor_G49
+    ##    <fct> <chr>   <dbl>      <dbl>   <dbl>      <dbl>   <dbl>      <dbl>   <dbl>
+    ##  1 W63   Grou~   0.308      -14.0   0.265          1   0.351          1   0.345
+    ##  2 W67   Grou~   0.262      -13     0.182          1   0.259          1   0.321
+    ##  3 W78   Grou~   0.293      -13     0.175          1   0.24           1   0.336
+    ##  4 W81   Grou~   0.278      -14.0   0.189          1   0.268          1   0.284
+    ##  5 W116  Grou~   0.349      -13     0.178          1   0.232        -19   0.278
+    ##  6 W60   Grou~   0.186        0     0.785          0   0.912          0   0.771
+    ##  7 W74   Grou~   0.21        10     0.672          0   0.72           0   0.589
+    ##  8 W80   Grou~   0.219       -2     0.386          0   0.46           0   0.369
+    ##  9 W70   Grou~   0.341        0     0.17         -19   0.169        -19   0.208
+    ## 10 W73   Grou~   0.290        1     0.161         20   0.17          18   0.16 
+    ## 11 W115  Grou~   0.228        1     0.179        -19   0.22         -19   0.224
+    ## 12 W118  Grou~   0.293        1     0.147          6   0.232         -5   0.262
+    ## # ... with 27 more variables: Months_G49 <dbl>, Cor_G51 <dbl>,
+    ## #   Months_G51 <dbl>, Cor_G53 <dbl>, Months_G53 <dbl>, Cor_G65 <dbl>,
+    ## #   Months_G65 <dbl>, Cor_RV <dbl>, Months_RV <dbl>, Cor_CDY <dbl>,
+    ## #   Months_CDY <dbl>, Cor_KY <dbl>, Months_KY <dbl>, Cor_HY <dbl>,
+    ## #   Months_HY <dbl>, Cor_GI <dbl>, Months_GI <dbl>, Cor_GS <dbl>,
+    ## #   Months_GS <dbl>, Cor_GO <dbl>, Months_GO <dbl>, Cor_NP <dbl>,
+    ## #   Months_NP <dbl>, Cor_DC <dbl>, Months_DC <dbl>, Cor_Pu <dbl>,
+    ## #   Months_Pu <dbl>
 
 References
 ==========
@@ -435,3 +651,7 @@ Methods in R: PCA, M (ca), Famd, Mfa, Hcpc, Factoextra*. Vol. 2. Sthda.
 Lê, Sébastien, Julie Josse, and François Husson. 2008. “FactoMineR: A
 Package for Multivariate Analysis.” *Journal of Statistical Software* 25
 (1): 1–18. <https://doi.org/10.18637/jss.v025.i01>.
+
+Trapletti, Adrian, and Kurt Hornik. 2019. *Tseries: Time Series Analysis
+and Computational Finance*.
+<https://CRAN.R-project.org/package=tseries>.

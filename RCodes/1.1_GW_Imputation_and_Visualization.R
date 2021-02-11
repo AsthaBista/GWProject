@@ -27,7 +27,7 @@ for(i in 2:ncol(gwlevel)){
 colnames(gw_imputed)<-c("W60","W63","W67","W70","W73","W74","W78","W80","W81","W115","W116","W118") #Add column headings
 
 head(gw_imputed)
-write.csv(gw_imputed,"GWLevel_imputed.csv")
+write.csv(gw_imputed,"Data_Processing/GWLevel_imputed.csv")
 
 # Visualize the imputed values in one of the groundwater wells
 

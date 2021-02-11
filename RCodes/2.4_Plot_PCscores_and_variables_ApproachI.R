@@ -57,9 +57,6 @@ dev.off()
 ###---------------------------------------------------------------------------------------------------------------
 
 W <- scale(read.csv("Approach_I/GWLevels_stationary.csv", sep=","))
-S <- scale(read.csv("Approach_I/SW_stationary.csv", sep=","))
-P <- scale(read.csv("Approach_I/Precipitation_stationary.csv", sep=","))
-Pu <- read.csv("Approach_I/Pumping_stationary.csv", sep=",")
 
 
 #PC time series
@@ -82,33 +79,6 @@ w115.ts<-ts(W[,11],start=c(2000,1),end=c(2018,12),frequency = 12)
 w116.ts<-ts(W[,12],start=c(2000,1),end=c(2018,12),frequency = 12) 
 w118.ts<-ts(W[,13],start=c(2000,1),end=c(2018,12),frequency = 12) 
 
-#Streams time series
-head(S)
-g40.ts<-ts(S[,2],start=c(2000,1),end=c(2018,12),frequency = 12)
-g42.ts<-ts(S[,3],start=c(2000,1),end=c(2018,12),frequency = 12)
-g43.ts<-ts(S[,4],start=c(2000,1),end=c(2018,12),frequency = 12)
-g45.ts<-ts(S[,5],start=c(2000,1),end=c(2018,12),frequency = 12)
-g49.ts<-ts(S[,6],start=c(2000,1),end=c(2018,12),frequency = 12)
-g51.ts<-ts(S[,7],start=c(2000,1),end=c(2018,12),frequency = 12)
-g53.ts<-ts(S[,8],start=c(2000,1),end=c(2018,12),frequency = 12)
-g65.ts<-ts(S[,9],start=c(2000,1),end=c(2018,12),frequency = 12)
-
-#Precipitation time series
-head(P)
-rv.ts<-ts(P[,2],start=c(2000,1),end=c(2018,12),frequency = 12)
-cdy.ts<-ts(P[,3],start=c(2000,1),end=c(2018,12),frequency = 12)
-ky.ts<-ts(P[,4],start=c(2000,1),end=c(2018,12),frequency = 12)
-hy.ts<-ts(P[,5],start=c(2000,1),end=c(2018,12),frequency = 12)
-gi.ts<-ts(P[,6],start=c(2000,1),end=c(2018,12),frequency = 12)
-gs.ts<-ts(P[,7],start=c(2000,1),end=c(2018,12),frequency = 12)
-go.ts<-ts(P[,8],start=c(2000,1),end=c(2018,12),frequency = 12)
-np.ts<-ts(P[,9],start=c(2000,1),end=c(2018,12),frequency = 12)
-dc.ts<-ts(P[,10],start=c(2000,1),end=c(2018,12),frequency = 12)
-
-#Pumping time series
-head(Pu)
-rec.ts<-ts(Pu[,2],start=c(2000,1),end=c(2013,12),frequency = 12)
-pum.ts<-ts(Pu[,2],start=c(2000,1),end=c(2013,12),frequency = 12)
 
 #####-------------------------------------PCs and groups of wells plot------------------------------------------------------------------------------
 windows(width=30, height=20)
