@@ -1,5 +1,5 @@
 ---
-title: "Approach I"
+title: "Approach I Methods"
 author: "Astha Bista"
 date: "2/9/2021"
 output: md_document
@@ -7,7 +7,7 @@ bibliography: [packages.bib, ref.bib]
 biblio-style: "apalike"
 link-citations: true
 ---
-This document consists of two main parts of Approach I: Principal component analysis and cluster analysis. The data used were first made stationary by using first degree differencing.
+This document consists of three main parts of Approach I: Principal component analysis, cluster analysis, and cross correlation between variables. The data used were first made stationary by using first degree differencing.
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```

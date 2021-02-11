@@ -1,6 +1,7 @@
-This document consists of two main parts of Approach I: Principal
-component analysis and cluster analysis. The data used were first made
-stationary by using first degree differencing.
+This document consists of three main parts of Approach I: Principal
+component analysis, cluster analysis, and cross correlation between
+variables. The data used were first made stationary by using first
+degree differencing.
 
 Before beginning, here is a function to plot many time series using
 ggplot.We will be using this function in the following lines to plot
@@ -62,7 +63,7 @@ values in some cases.
 
     create_timeseries_plots(diff_gw)
 
-![](Approach_I_Par1_files/figure-markdown_strict/unnamed-chunk-5-1.png)
+![](Approach_I_files/figure-markdown_strict/unnamed-chunk-5-1.png)
 
 Principal Component Analysis
 ============================
@@ -122,7 +123,7 @@ in wells.
     corrplot(cor.mat, type="upper", order="hclust", 
              tl.col="black", tl.srt=45)
 
-![](Approach_I_Par1_files/figure-markdown_strict/unnamed-chunk-11-1.png)
+![](Approach_I_files/figure-markdown_strict/unnamed-chunk-11-1.png)
 
 ### Performing PCA
 
@@ -138,7 +139,7 @@ Now, FactoMine package (Lê, Josse, and Husson
 
     res.pca <- PCA(GWData, graph = F)
 
-![](Approach_I_Par1_files/figure-markdown_strict/unnamed-chunk-14-1.png)
+![](Approach_I_files/figure-markdown_strict/unnamed-chunk-14-1.png)
 
 The above screeplot shows that three components are dominant in the
 data. Therefore, we will use three principal components. The variables
@@ -149,7 +150,7 @@ components.
     fviz_pca_var(res.pca, col.var="contrib")+ 
       scale_color_gradient2(low="white",mid="blue",high="red", midpoint=2.5)+theme_bw()
 
-![](Approach_I_Par1_files/figure-markdown_strict/unnamed-chunk-15-1.png)
+![](Approach_I_files/figure-markdown_strict/unnamed-chunk-15-1.png)
 
 ### PCA results
 
@@ -213,7 +214,7 @@ Elbow method to find optimal number of clusters:
       geom_vline(xintercept = 3, linetype = 2)+
       labs(subtitle = "Elbow method")
 
-![](Approach_I_Par1_files/figure-markdown_strict/unnamed-chunk-20-1.png)
+![](Approach_I_files/figure-markdown_strict/unnamed-chunk-20-1.png)
 
 Using heirarchical clustering:
 
@@ -225,7 +226,7 @@ Using heirarchical clustering:
     mtext('Group B',side = 1,at = 7)
     mtext('Group C',side = 1,at = 10)
 
-![](Approach_I_Par1_files/figure-markdown_strict/unnamed-chunk-21-1.png)
+![](Approach_I_files/figure-markdown_strict/unnamed-chunk-21-1.png)
 
 Using k-means clustering:
 
@@ -243,7 +244,7 @@ against PC1
            cex=1,bty="y")
     grid()
 
-![](Approach_I_Par1_files/figure-markdown_strict/unnamed-chunk-23-1.png)
+![](Approach_I_files/figure-markdown_strict/unnamed-chunk-23-1.png)
 
     plot(selectedData[,2],selectedData[,3],ylim=c(-0.5,0.7),xlim=c(-0.3,0.6),
          xlab="PC2",ylab="PC3",pch=19,cex=1,lty='solid',lwd=2,col= ClusterData)
@@ -251,7 +252,7 @@ against PC1
     legend('topright',legend=c("Group A","Group B","Group C"),col=c("maroon","blue","dark green"),pch=19,
            cex=1,bty="y")
 
-![](Approach_I_Par1_files/figure-markdown_strict/unnamed-chunk-24-1.png)
+![](Approach_I_files/figure-markdown_strict/unnamed-chunk-24-1.png)
 
     plot(selectedData[,1],selectedData[,3],ylim=c(-0.5,0.6),xlim=c(-0.1,0.5),
          xlab="PC1",ylab="PC3",pch=19,cex=1,lty='solid',lwd=2,col= ClusterData)
@@ -259,7 +260,7 @@ against PC1
     legend('topright',legend=c("Group A","Group B","Group C"),col=c("red","blue","dark green"),pch=19,
            cex=1,bty="y")
 
-![](Approach_I_Par1_files/figure-markdown_strict/unnamed-chunk-25-1.png)
+![](Approach_I_files/figure-markdown_strict/unnamed-chunk-25-1.png)
 
 Comparison of principal components and groundwater wells
 ========================================================
@@ -326,8 +327,8 @@ Here is a plot showing the PC scores:
     axis(1,at=seq(2000,2019,1),labels=year.text)
     title(xlab="Year", outer=TRUE)
 
-![](Approach_I_Par1_files/figure-markdown_strict/unnamed-chunk-28-1.png)
-Now, the wells having correlations with each PC are plotted with the
+![](Approach_I_files/figure-markdown_strict/unnamed-chunk-28-1.png) Now,
+the wells having correlations with each PC are plotted with the
 respective PC.
 
     par(mfrow=c(3,1), mar=c(0,3.5,0,3), oma=c(4,2,2,0), mgp=c(2,.6,0), cex.lab=1.5, tcl=-.3, las=1)
@@ -377,11 +378,11 @@ respective PC.
     mtext("Standardized units",side = 2,outer = TRUE,las = 0,cex = 1)
     mtext("Year",side = 1,outer = TRUE,line = 2,cex = 1)
 
-![](Approach_I_Par1_files/figure-markdown_strict/unnamed-chunk-29-1.png)
-\# Cross correlation of variables For calculating cross correlation,
-ccf() from tseries package (Trapletti and Hornik [2019](#ref-R-tseries))
-was used. This function computes the sample crosscorrelation
-(covariance) function of x and y up to lag lag. If pl is TRUE, then the
+![](Approach_I_files/figure-markdown_strict/unnamed-chunk-29-1.png) \#
+Cross correlation of variables For calculating cross correlation, ccf()
+from tseries package (Trapletti and Hornik [2019](#ref-R-tseries)) was
+used. This function computes the sample crosscorrelation (covariance)
+function of x and y up to lag lag. If pl is TRUE, then the
 crosscorrelation (covariance) function is plotted. For the
 crosscorrelation function also the 95% confidence bounds for strict
 white noise are plotted. Uses fft for efficiency reasons.
