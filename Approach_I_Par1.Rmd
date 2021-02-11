@@ -356,7 +356,6 @@ Pu <- -read.csv("Data_Processing/Pumping.csv", sep=",")[-1]
 All <- data.frame(W,S,P)
 All$Pu <- c(unlist(Pu),rep(NA, nrow(All)-nrow(Pu)))
 tbl_df(All)
-round(cor(All, use="complete.obs"),2)
 ```
 
 Here, first two functions were created
@@ -442,7 +441,7 @@ df4<-df3 %>%
   select(Wells, Group, Cor_G40:Months_Pu) %>%
   group_by(Group) %>%
   arrange(Group)
-df4
+head(df4)
 ```
 
 
