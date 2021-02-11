@@ -378,14 +378,18 @@ respective PC.
     mtext("Standardized units",side = 2,outer = TRUE,las = 0,cex = 1)
     mtext("Year",side = 1,outer = TRUE,line = 2,cex = 1)
 
-![](Approach_I_files/figure-markdown_strict/unnamed-chunk-29-1.png) \#
-Cross correlation of variables For calculating cross correlation, ccf()
-from tseries package (Trapletti and Hornik [2019](#ref-R-tseries)) was
-used. This function computes the sample crosscorrelation (covariance)
-function of x and y up to lag lag. If pl is TRUE, then the
-crosscorrelation (covariance) function is plotted. For the
-crosscorrelation function also the 95% confidence bounds for strict
-white noise are plotted. Uses fft for efficiency reasons.
+![](Approach_I_files/figure-markdown_strict/unnamed-chunk-29-1.png)
+
+Cross correlation of variables
+==============================
+
+For calculating cross correlation, ccf() from tseries package (Trapletti
+and Hornik [2019](#ref-R-tseries)) was used. This function computes the
+sample crosscorrelation (covariance) function of x and y up to lag lag.
+If pl is TRUE, then the crosscorrelation (covariance) function is
+plotted. For the crosscorrelation function also the 95% confidence
+bounds for strict white noise are plotted. Uses fft for efficiency
+reasons.
 
 Preparing the data:
 
