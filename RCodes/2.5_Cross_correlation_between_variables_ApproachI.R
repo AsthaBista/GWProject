@@ -1,24 +1,24 @@
 # Set path
 setwd("C:/Users/Aastha/Desktop/GWProject")
 
-install.packages("kableExtra","dplyr","tidyr")
-library(kableExtra)
-library(dplyr)
-library(tidyr)
+if (!require('Rssa')) install.packages("kableExtra","dplyr","tidyr");
+x <- c("kableExtra","dplyr","tidyr");
+lapply(x, require, character.only = TRUE)
+
 
 # Prepare data
 W <- read.csv("Approach_I/GWLevels_stationary.csv", sep=",")[-1]
 S <- read.csv("Approach_I/SW_stationary.csv", sep=",")[-1]
 P <- read.csv("Approach_I/Precipitation_stationary.csv", sep=",")[-1]
+Tm <- read.csv("Approach_I/Temperature_stationary.csv", sep=",")[-1]
 Pu <- -read.csv("Data_Processing/Pumping.csv", sep=",")[-1]
 
 #Combining all variables
-All <- data.frame(W,S,P)
+All <- data.frame(W,S,P,Tm)
 All$Pu <- c(unlist(Pu),rep(NA, nrow(All)-nrow(Pu)))
 tbl_df(All)
-round(cor(All, use="complete.obs"),2)
 
-#FUnction to find maximum correlation
+#Function to find maximum correlation
 Find_Max_CCF<- function(a,b)
 {
   d <- ccf(a, b, plot = FALSE,na.action = na.contiguous)
@@ -30,7 +30,7 @@ Find_Max_CCF<- function(a,b)
 } 
 
 
-#function to find crosscorrelations for each pair
+#Function to find crosscorrelations for each pair
 Create_crosscorrelation_table<- function(df)
 {
   col<-colnames(df)
@@ -78,8 +78,8 @@ df2 <- new_df %>%
   pivot_wider(names_from = Var1, values_from = val)   #arrange dataframe in a wide form
 
 #Seoarate columns with correlation and months
-cor_df<-cbind(df2[,1],round(df2[,2:18],3))
-mth_df<-df2[,19:35]
+cor_df<-cbind(df2[,1],round(df2[,2:26],3))
+mth_df<-df2[,27:51]
 #arrange the order
 neworder <- order(c(2*(seq_along(cor_df[,-1]) - 1) + 1,
                     2*seq_along(mth_df)))
@@ -102,8 +102,11 @@ dt <-df4
 kbl(dt) %>%
   kable_paper() %>%
   add_header_above(c(" " = 1," " = 1, "G40" = 2,"G42" = 2,"G45"=2,"G49"=2,"G51"=2,"G53"=2,"G65"=2,
-                     "RV"=2,"CDY"=2,"KY"=2,"HY"=2,"GI"=2,"GS"=2,"GO"=2,"NP"=2,"DC"=2,"Pu" = 2)) %>%
-  add_header_above(c(" " = 1," " = 1, "Gauge_stations" = 14,"Precipitation" = 18,"Pumping" = 2))
+                     "RV"=2,"CDY"=2,"KY"=2,"HY"=2,"GI"=2,"GS"=2,"GO"=2,"NP"=2,"DC"=2,
+                     "RV_T"=2,"CDY_T"=2,"KY_T"=2,"HY_T"=2,"GI_T"=2,"GS_T"=2,"GO_T"=2,"NP_T"=2,
+                     "DC_T"=2,"Pu" = 2)) %>%
+  add_header_above(c(" " = 1," " = 1, "Gauge_stations" = 14,"Precipitation" = 18,
+                     "Temperature" = 18,"Pumping" = 2))
 
 
                    

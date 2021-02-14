@@ -3,9 +3,11 @@
 ###---------------------------------------------------------------------------------------------------------------------------------
 
 setwd("C:/Users/Aastha/Desktop/GWProject")
-list.of.packages <- c("tseries")
-new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
-if(length(new.packages)) install.packages(new.packages)
+
+if (!require('Rssa')) install.packages("tseries");
+x <- c("tseries");
+lapply(x, require, character.only = TRUE)
+
 
 ## First, here is a function to plot many time series using ggplot
 ## We will be using this function in the following lines
@@ -40,7 +42,6 @@ create_timeseries_plots <- function(df){
 GW<-read.csv(file ="Data_Processing/GWLevel_imputed.csv",header = TRUE)  
 head(GW)
 
-library(tseries)
 
 #Loop around each column in the dataframe to obtain a dataframe containing first degree differenced values
 diff_gw<-c()
@@ -106,10 +107,32 @@ for(i in 1:9){
 }
 write.csv(diff_pr,"Approach_I/Precipitation_stationary.csv")
 create_timeseries_plots(diff_pr)
-dev.copy2pdf(file = 'Approach_I/Streamstage_stationary.pdf')
+dev.copy2pdf(file = 'Approach_I/Precipitation_stationary.pdf')
 dev.off()
 
-#Pumping
+# ----------------------Temperature------------------------------------------------
+Tmp<-read.csv(file ="Data_Processing/Temperature_imputed.csv",header = TRUE)  
+head(Tmp)
+
+
+diff_tmp<-c()
+for(i in 2:9){
+  diff_dat<-diff(Tmp[,i])
+  diff_tmp<-cbind(diff_tmp,diff_dat)
+}
+
+colnames(diff_tmp)<-c("RVT","CDYT","KYT","HYT","GIT","GOT","NPT","DCT")
+
+#Check stationarity using Augmented Dickey-Fuller (ADF) t-statistic test for unit root
+for(i in 1:8){ 
+  print(adf.test(diff_pr[,i])$p.value)  #Alternate hypotheisis: stationary
+}
+write.csv(diff_tmp,"Approach_I/Temperature_stationary.csv")
+create_timeseries_plots(diff_tmp)
+dev.copy2pdf(file = 'Approach_I/Temperature_stationary.pdf')
+dev.off()
+
+# ----------------------Pumping------------------------------------------------
 Pmp<-read.csv(file ="Data_Processing/Pumping.csv",header = TRUE)  
 head(Pmp)
 
