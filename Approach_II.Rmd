@@ -8,7 +8,7 @@ biblio-style: "apalike"
 link-citations: true
 ---
 
-```{r setup, include=FALSE}
+```{r setup, echo=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
