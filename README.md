@@ -5,8 +5,18 @@ Keywords:  Groundwater management; Data mining; PCA; MSSA; Cluster analysis; Pla
 
 ## Contents
 This project package consists of all the methods that were used. The methods is comprised mainly of three parts:
-* Data processing 
+* Data processing
+  + contains imputation of data
+  + visualization of data
 * Approach I
+  + Principal component analysis
+  + Cluster analysis
+  + Visualization and comparison
+  + Cross correlation between variables
 * Approach II
+  + Preparation of subgroup of variables
+  + MSSA operation of subgroups
+  + Cluster analysis
+  + Visualization
 
 Each of these methods are explained in their respective .md files. All the R files are in the folder "RCodes".
