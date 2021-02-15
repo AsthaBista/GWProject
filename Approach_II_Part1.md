@@ -63,7 +63,7 @@ of the vector.
                  xlab = "Months",main=paste0("F",i,": ",perc[i]),cex.main=1)
     }
 
-![](Approach_II_files/figure-markdown_strict/unnamed-chunk-5-1.png)
+![](Approach_II_Part1_files/figure-markdown_strict/unnamed-chunk-5-1.png)
 
 The separability of eigenvectors can also be assessed by plotting w
 correlation graph, which is defined by (Golyandina et al.
@@ -74,7 +74,7 @@ correlation graph, which is defined by (Golyandina et al.
     w <- wcor(s, groups = 1:20)
     plot(w, grid = c(2,4, 5,7))
 
-![](Approach_II_files/figure-markdown_strict/unnamed-chunk-6-1.png)
+![](Approach_II_Part1_files/figure-markdown_strict/unnamed-chunk-6-1.png)
 
 Using this plot, we can find which eigenvectors have high correations
 with each other and can be grouped together to form reconstructed
@@ -123,7 +123,7 @@ variables of the subgroup of W70 well.
         text(2012.5,4,paste0(osc[j]," oscillation: Explained variance = ",var_explained[[j]][[4]],"%"),cex=1,font = 1)
         }  
 
-![](Approach_II_files/figure-markdown_strict/unnamed-chunk-9-1.png)
+![](Approach_II_Part1_files/figure-markdown_strict/unnamed-chunk-9-1.png)
 
 References
 ----------
