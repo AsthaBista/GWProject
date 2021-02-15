@@ -35,7 +35,9 @@ colnames(w60Gp) <- c("W60","G42","KY_P","KY_T","Pumping")
 head(w60Gp)
 ```
 
-This is the data containing data from the subgroup containing W60 well. This data is then used for MSSA operation, for which guidance from [@golyandina2013multivariate] and [@hassani2013multivariate] were taken. Rssa package [@Rssa2015] was used for multivariate singular spectrum analysis (MSSA).
+## MSSA operation
+
+The above is the data containing data from the subgroup containing W60 well. This data is then used for MSSA operation, for which guidance from [@golyandina2013multivariate] and [@hassani2013multivariate] were taken. Rssa package [@Rssa2015] was used for multivariate singular spectrum analysis (MSSA).
 
 ```{r}
 Data<-scale(read.csv(file ="Approach_II/MSSA_Work/W60_variables_set.csv",header = TRUE)[-1])
