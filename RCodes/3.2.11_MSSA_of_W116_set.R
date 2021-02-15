@@ -1,4 +1,4 @@
-if (!require('Rssa')) install.packages('ggplot2'); library('ggplot2')
+if (!require('Rssa')) install.packages('Rssa'); library('Rssa')
 
 # Set path
 setwd("C:/Users/Aastha/Desktop/GWProject")

@@ -54,7 +54,7 @@ write.csv(w115Gp,"Approach_II/MSSA_Work/W115_variables_set.csv")
 
 w116Gp <- data.frame(GW[,11],SW[,6],Pr[,5],Tmp[,5],c(unlist(Pmp),rep(NA, nrow(GW)-nrow(Pmp))))  #W116,G53,GI
 colnames(w116Gp) <- c("W116","G53","GI_P","GI_T","Pumping") 
-write.csv(w80Gp,"Approach_II/MSSA_Work/W116_variables_set.csv")
+write.csv(w116Gp,"Approach_II/MSSA_Work/W116_variables_set.csv")
 
 w118Gp <- data.frame(GW[,12],SW[,7],Pr[,9],Tmp[,8],c(unlist(Pmp),rep(NA, nrow(GW)-nrow(Pmp))))  #W116,G65,DC
 colnames(w118Gp) <- c("W118","G65","DC_P","DC_T","Pumping") 

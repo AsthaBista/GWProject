@@ -11,6 +11,7 @@ VariableList <- list(c("W60","G42","KY_P","KY_T","Pumping"),c("W63","G42","KY_P"
                      c("W116","G53","GI_P","GI_T","Pumping"),c("W118","G65","DC_P","DC_T","Pumping"))
 
 
+wellNo <- c("W60","W63","W67","W70","W73","W74","W78","W80","W81","W115","W116","W118")
 
 # Here, we want to plot the RCs for each variable for each subgroup
 #First loop around the subgroup

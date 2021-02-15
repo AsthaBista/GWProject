@@ -10,9 +10,9 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r }
-#knitr::write_bib(c("knitr", "rmarkdown","ggplot2", "forecast","reshape2","dplyr","forecast","tseries","kableExtra","tidyr"), width = 60)
+#knitr::write_bib(c("knitr", "rmarkdown","ggplot2","Rssa", "forecast","reshape2","dplyr","forecast","tseries","kableExtra","tidyr"), width = 60)
 ```
 ```{r}
-knitr::write_bib(c(.packages(), "tseries","FactoMineR","factoextra","rela","psych","corrplot","knitr", "rmarkdown","ggplot2", "forecast","reshape2","dplyr","forecast"), "packages.bib")
+knitr::write_bib(c(.packages(), "tseries","FactoMineR","factoextra","rela","psych","corrplot","knitr", "rmarkdown","ggplot2", "forecast","reshape2","dplyr","forecast","Rssa"), "packages.bib")
 ```
 

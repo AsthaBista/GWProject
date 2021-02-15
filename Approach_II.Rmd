@@ -13,8 +13,10 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-```{r , warning = FALSE, include=FALSE}
-if (!require('Rssa')) install.packages('Rssa'); library('Rssa')
+```{r , warning = FALSE, include=FALSE, echo=FALSE}
+if (!require('Rssa','dplyr','TSclust')) install.packages('Rssa','dplyr','TSclust');
+x <- c('Rssa','dplyr','TSclust');
+lapply(x, require, character.only = TRUE)
 ```
 
 ## Preparing the set of variables
@@ -78,3 +80,224 @@ r <- reconstruct(s,groups = list(c(1,2),c(3,4),c(5,6),c(7,10),c(8,9),c(11),c(12,
                                  c(13,15,18),c(16,17),c(19,20)))
 ```
 
+Here is a plot comparing the decadal and seasonal oscillations in the variables of the subgroup of W70 well.
+```{r echo=FALSE}
+variableList <- list(c("W60","G42","Kearney (KY) precipitation","Kearney (KY) temperature","Pumping"),
+                     c("W63","G42","Kearney (KY) precipitation","Kearney (KY) temperature","Pumping"),
+                     c("W67","G45","Kearney (KY) precipitation","Kearney (KY) temperature","Pumping"),
+                     c("W70","G40","Canaday steam plant (CDY) precipitation","Canaday steam plant (CDY) temperature","Pumping"), c("W73","G40","Canaday steam plant (CDY) precipitation","Canaday steam plant (CDY) temperature","Pumping"),
+                     c("W74","G42","Gothenberg (GO) precipitation","Gothenberg (GO) temperature","Pumping"),
+                     c("W78","G49","Grand Island (GI) precipitation","Grand Island (GI) temperature","Pumping"),
+                     c("W80","G42","Gothenberg (GO) precipitation","Gothenberg (GO) temperature","Pumping"),
+                     c("W81","G49","Grand Island (GI) precipitation","Grand Island (GI) temperature","Pumping"),
+                     c("W115","G53","Grand Island (GI) precipitation","Grand Island (GI) temperature","Pumping"),
+                     c("W116","G53","Grand Island (GI) precipitation","Grand Island (GI) temperature","Pumping"),
+                     c("W118","G65","David City (DC) precipitation","David City (DC) temperature","Pumping"))
+
+# List of seasonal and decadal variations in MSSA operations for each respective subgroup
+var_explained <- list(c(36.08,33.92,35.65,37.84,38.53,36.01,38.47,37.67,38.66,37.72,37.93,38.06),
+                      c(18.19,27.76,23.62,24.8,24.34,19.57,23.8,17.64,23.69,23.35,21.71,15.8))
+osc <- c("Seasonal","Decadal")
+
+list <- c("W","G","P","T","Pu")
+```
+
+```{r fig.height=5,fig.width=15}
+
+par(mfrow = c(1, 2))
+
+## Loop around seasonal and decadal oscillations
+for (j in 1:2){
+    # Assign filepath for each subgroup
+    assign(paste0("filepath",j),Sys.glob(path=paste0("Approach_II/MSSA_Work/W70_RC",
+                                                     sprintf("%02d",as.numeric(j)),".csv")))
+    # Read RC files for decadal and seasonal in each subgroup
+    assign(paste0("F",j),read.csv(file=get(paste0("filepath",j)),header = TRUE))
+    
+    ## Loop around each variable 
+    for (k in 1:length(list)){
+        # Create time series object for each variable
+        assign(paste0(list[k],".ts"),ts(get(paste0("F",j))[,k+1],start=c(2000,1),end=c(2018,12),
+                                        frequency = 12))
+    }
+    
+    ## Plot time series of all variables for decadal and seasonal separately
+    ts.plot(W.ts,G.ts,P.ts,T.ts,Pu.ts,
+            gpars = list(xlab="Year",ylab="Standardized units",xaxt="n",ylim=c(-2,4),
+                         col=c("green","blue","purple","orange","dark green"),lty=c(1,1,2,2,2,3),lwd=c(2,2,2,2,2,3)))
+    
+    year.text=c("2000","2001","2002","2003","2004","2005","2006","2007",
+                "2008","2009","2010","2011","2012","2013","2014","2015","2016","2017","2018","2019")
+    axis(1,at=seq(2000,2019,1),labels=year.text)
+    abline(v=seq(2000,2019,1),lty = 6, col = "cornsilk2")
+    grid (NA,NULL, lty = 6, col = "cornsilk2")
+    
+    
+    legend('topleft',legend=variableList[[4]],
+           col=c("green","blue","purple","orange","dark green"),lty=c(1,1,2,2,2,3),lwd=c(2,2,2,2,2,3),cex=1,bty ="n")
+    text(2012.5,4,paste0(osc[j]," oscillation: Explained variance = ",var_explained[[j]][[4]],"%"),cex=1,font = 1)
+    }  
+```
+
+## Cluster analysis
+
+A heirarchical cluster anaysis was conducted on the groundwater levels in the wells. This resulted in a groups division of wells.
+
+```{r}
+# Prepare data
+W <- read.csv("Data_Processing/GWLevel_imputed.csv", sep=",")[-1]
+S <- read.csv("Data_Processing/SW_imputed.csv", sep=",")[-1]
+P <- read.csv("Data_Processing/Precipitation_imputed.csv", sep=",")[-1]
+Tm <- read.csv("Data_Processing/Temperature_imputed.csv", sep=",")[-1]
+Pu <- -read.csv("Data_Processing/Pumping.csv", sep=",")[-1]
+
+#Combining all variables
+All <- data.frame(W,S,P,Tm)
+All$Pu <- c(unlist(Pu),rep(NA, nrow(All)-nrow(Pu)))
+head(All)
+
+#Selecting variables for cluster analysis
+onlyWells <- scale(All[,1:12])
+allVar <- scale(All[1:156,])
+```
+```{r fig.height=5,fig.width=10}
+#Using Pearson's correlation coeffiecint for oly groundwater levels
+cordat<-diss(t(onlyWells), "COR")
+hc<-hclust(cordat, method="ward.D")
+plot(hc,main=" ",sub =" ",xlab = " ")
+rect(0.7,-0.15,6.3,1.3,border =  "red")
+rect(6.6,-0.15,9.1,1.3,border =  "red")
+rect(9.5,-0.15,12.2,1.35,border =  "red")
+mtext('Group I',side = 1,at = 3)
+mtext('Group III',side = 1,at = 8)
+mtext('Group II',side = 1,at = 11)
+```
+
+Now, all the variables can also be plotted to understand the relationship between the variables.
+
+```{r fig.height=5,fig.width=10}
+cordat<-diss(t(allVar), "COR")
+hc<-hclust(cordat, method="ward.D")
+plot(hc,main=" ",sub =" ",xlab = " ")
+rect.hclust(hc, k=3,border = 'red', )
+mtext('C1',side = 1,at = 8)
+mtext('C2',side = 1,at = 25)
+mtext('C3',side = 1,at = 32)
+```
+
+These groups obtained from cluster analysis can be compared using decadal ans seasonal oscillations from MSSA.
+
+```{r echo=FALSE}
+## Read original, decadal, and seasonal dataframes
+OT <- scale(read.csv("Data_Processing/GWLevel_imputed.csv"),scale=F)[,-1]
+DT <- scale(read.csv("Approach_II/Decadal_RC_of_groundwater.csv"),scale=F)[,-1]
+ST <- scale(read.csv("Approach_II/Seasonal_RC_of_groundwater.csv"),scale=F)[,-1]
+
+
+# Original time series
+for(i in 1:length(wellNo)){
+        assign(paste0("o","_",wellNo[i],".ts"),
+               ts(OT[,i],start=c(2000,1),end=c(2018,12),frequency = 12))
+        
+}
+# Decadal time series
+for(i in 1:length(wellNo)){
+    assign(paste0("d","_",wellNo[i],".ts"),
+           ts(DT[,i],start=c(2000,1),end=c(2018,12),frequency = 12))
+    
+}
+# Seasonal time series
+for(i in 1:length(wellNo)){
+    assign(paste0("s","_",wellNo[i],".ts"),
+           ts(ST[,i],start=c(2000,1),end=c(2018,12),frequency = 12))
+    
+}
+```
+
+
+```{r echo =FALSE fig.height=5,fig.width=10}
+## Plot all decadal and seasonal based on groups of groundwater wells
+par(mfcol=c(3,2), mar=c(0,3.5,0,1), oma=c(4,2,2,0), mgp=c(2,.6,0), cex.lab=1.1, tcl=-.3, las=1)
+#Group1
+ts.plot(d_W63.ts,d_W67.ts,d_W78.ts,d_W81.ts,d_W115.ts,d_W118.ts,
+        gpars = list(xlab=" ",ylab=" ",cex=1,xaxt="n",yaxt="n"),
+        col=c("blue","purple","orange","green","dark green","maroon"),lwd=c(2,2,2,2),lty=c(1,1,1,1,1,1),ylim=c(-2,2.5))
+abline(v=seq(2000,2019,1),lty = 6, col = "cornsilk2")
+axis(2,cex.axis=1.2)
+grid (NA,NULL, lty = 6, col = "cornsilk2")
+legend('topleft',horiz = TRUE,legend=c("W63","W67","W78","W81","W115","W118"),
+       col=c("blue","purple","orange","green","dark green","maroon"),lwd=c(2,2,2,2),lty=c(1,1,1,1,1,1,1),cex=1.2,bty="y")
+text(2018,-1.8,"Group I",cex=1.5,bty="n")
+
+#Group2
+ts.plot(d_W60.ts,d_W74.ts,d_W80.ts,
+        gpars = list(xlab=" ",ylab=" ",cex=1,xaxt="n",yaxt="n"),
+        col=c("maroon","green","blue","purple","blue","green"),lwd=c(2,2,2,2),lty=c(1,1,1),ylim=c(-2,2.5))
+abline(v=seq(2000,2019,1),lty = 6, col = "cornsilk2")
+axis(2,cex.axis=1.2)
+grid (NA,NULL, lty = 6, col = "cornsilk2")
+legend('topleft',horiz = TRUE,legend=c("W60","W74","W80"),
+       col=c("maroon","green","blue","purple","blue","green"),lwd=c(2,2,2,2),lty=c(1,1,1),cex=1.2,bty="y")
+text(2018,-1.8,"Group II",cex=1.5,bty="n")
+
+#Group3
+ts.plot(d_W70.ts,d_W73.ts,d_W116.ts,
+        gpars = list(xlab=" ",ylab=" ",cex=1,xaxt="n",yaxt="n"),
+        col=c("maroon","dark green","purple","orange","blue","green"),lwd=c(2,2,2,2),lty=c(1,1,1),ylim=c(-2,2.5))
+abline(v=seq(2000,2019,1),lty = 6, col = "cornsilk2")
+axis(2,cex.axis=1.2)
+grid (NA,NULL, lty = 6, col = "cornsilk2")
+legend('topleft',horiz = TRUE,legend=c("W70","W73","W116"),
+       col=c("maroon","dark green","purple","orange","blue","green"),lwd=c(2,2,2,2),lty=c(1,1,1),cex=1.2,bty="y")
+text(2018,-1.8,"Group III",cex=1.5,bty="n")
+
+
+year.text=c("2000","2001","2002","2003","2004","2005","2006","2007","2008","2009","2010","2011","2012","2013",
+            "2014","2015","2016","2017","2018","2019")
+axis(1,at=seq(2000,2019,1),labels=year.text,cex.axis = 1.2)
+mtext("Standardized units",side = 2,outer = TRUE,las = 0,cex = 1.2)
+mtext("Year",side = 1,outer = TRUE,line = 2,cex = 1.2)
+
+
+## Seasonal time series
+#Group1
+ts.plot(s_W63.ts,s_W67.ts,s_W78.ts,s_W81.ts,s_W115.ts,s_W118.ts,
+        gpars = list(xlab=" ",ylab=" ",cex=1,xaxt="n",yaxt="n"),
+        col=c("blue","purple","orange","green","dark green","maroon"),lwd=c(2,2,2,2),lty=c(1,1,1,1,1,1),ylim=c(-1.5,1.5))
+abline(v=seq(2000,2019,1),lty = 6, col = "cornsilk2")
+axis(2,cex.axis=1.2)
+grid (NA,NULL, lty = 6, col = "cornsilk2")
+legend('topleft',horiz = TRUE,legend=c("W63","W67","W78","W81","W115","W118"),
+       col=c("blue","purple","orange","green","dark green","maroon"),lwd=c(2,2,2,2),lty=c(1,1,1,1,1,1,1),cex=1.2,bty="y")
+text(2018,-1.3,"Group I",cex=1.5,bty="n")
+
+#Group2
+ts.plot(s_W60.ts,s_W74.ts,s_W80.ts,
+        gpars = list(xlab=" ",ylab=" ",cex.axis=1.2,xaxt="n",yaxt="n"),
+        col=c("maroon","green","blue","purple","blue","green"),lwd=c(2,2,2,2),lty=c(1,1,1),ylim=c(-1.5,1.5))
+abline(v=seq(2000,2019,1),lty = 6, col = "cornsilk2")
+axis(2,cex.axis=1.2)
+grid (NA,NULL, lty = 6, col = "cornsilk2")
+legend('topleft',horiz = TRUE,legend=c("W60","W74","W80"),
+       col=c("maroon","green","blue","purple","blue","green"),lwd=c(2,2,2,2),lty=c(1,1,1),cex=1.2,bty="y")
+text(2018,-1.3,"Group II",cex=1.5,bty="n")
+
+#Group3
+ts.plot(s_W70.ts,s_W73.ts,s_W116.ts,
+        gpars = list(xlab=" ",ylab=" ",cex=1,xaxt="n",yaxt="n"),
+        col=c("maroon","dark green","purple","orange","blue","green"),lwd=c(2,2,2,2),lty=c(1,1,1),ylim=c(-1.5,1.5))
+abline(v=seq(2000,2019,1),lty = 6, col = "cornsilk2")
+axis(2,cex.axis=1.2)
+grid (NA,NULL, lty = 6, col = "cornsilk2")
+legend('topleft',horiz = TRUE,legend=c("W70","W73","W116"),
+       col=c("maroon","dark green","purple","orange","blue","green"),lwd=c(2,2,2,2),lty=c(1,1,1),cex=1.2,bty="y")
+text(2018,-1.3,"Group III",cex=1.5,bty="n")
+
+
+
+year.text=c("2000","2001","2002","2003","2004","2005","2006","2007","2008","2009","2010","2011","2012","2013",
+            "2014","2015","2016","2017","2018","2019")
+axis(1,at=seq(2000,2019,1),labels=year.text,cex.axis = 1.2)
+```
+
+## References
