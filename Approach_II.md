@@ -1,22 +1,3 @@
-    if (!require('Rssa')) install.packages('Rssa'); library('Rssa')
-
-    ## Loading required package: Rssa
-
-    ## Loading required package: svd
-
-    ## Loading required package: forecast
-
-    ## Registered S3 method overwritten by 'quantmod':
-    ##   method            from
-    ##   as.zoo.data.frame zoo
-
-    ## 
-    ## Attaching package: 'Rssa'
-
-    ## The following object is masked from 'package:stats':
-    ## 
-    ##     decompose
-
 Preparing the set of variables
 ------------------------------
 
@@ -48,8 +29,11 @@ being shown since the codes for all the groups are similar.
     ## 5 2199.762 3.978221 2.68 62.2 150906056
     ## 6 2199.552 3.513387 3.63 68.4 623481138
 
-This is the data containing data from the subgroup containing W60 well.
-This data is then used for MSSA operation, for which guidance from
+MSSA operation
+--------------
+
+The above is the data containing data from the subgroup containing W60
+well. This data is then used for MSSA operation, for which guidance from
 (Golyandina et al. [2013](#ref-golyandina2013multivariate)) and (Hassani
 and Mahmoudvand [2013](#ref-hassani2013multivariate)) were taken. Rssa
 package (Golyandina et al. [2015](#ref-Rssa2015)) was used for
