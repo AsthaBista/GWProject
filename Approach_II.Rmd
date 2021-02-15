@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-```{r , warning = FALSE}
+```{r , warning = FALSE, include=FALSE}
 if (!require('Rssa')) install.packages('Rssa'); library('Rssa')
 ```
 
