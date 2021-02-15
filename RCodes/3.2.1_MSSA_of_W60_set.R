@@ -1,4 +1,4 @@
-if (!require('Rssa')) install.packages('ggplot2'); library('ggplot2')
+if (!require('Rssa')) install.packages('Rssa'); library('Rssa')
 
 # Set path
 setwd("C:/Users/Aastha/Desktop/GWProject")
@@ -9,14 +9,17 @@ L=108 #Assume window length close to N/2 (N=222 here)
 #Create a ssa object
 s <- ssa(Data, L = L, kind = "mssa")
 
-
+plot(s)
 #Plot eigenvectors with L window length
-windows(width=100, height=50)
+windows(width=10, height=5)
 par(mar = c(4, 4, 2, 2.5))
-par(mfrow=c(5,4))
-for(i in 1:20){
-  plot(s$U[,i], type="l")
+par(mfrow=c(2,2))
+perc <- c("18.72%","18.53%","10.08%","7.75%")
+for(i in 1:4){
+        plot(s$U[,i], type="l",ylab ="Standardized units",
+             xlab = "Months",main=paste0("F",i,": ",perc[i]),cex.main=1)
 }
+
 dev.copy(png,file = "Approach_II/MSSA_Work/Eigenvectors_MSSA_W60.png")
 dev.off()
   
