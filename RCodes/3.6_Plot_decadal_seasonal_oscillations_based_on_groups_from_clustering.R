@@ -64,16 +64,7 @@ legend('topleft',horiz = TRUE,legend=c("W63","W67","W78","W81","W115","W118"),
        col=c("blue","purple","orange","green","dark green","maroon"),lwd=c(2,2,2,2),lty=c(1,1,1,1,1,1,1),cex=1.2,bty="y")
 text(2018,-1.8,"Group I",cex=1.5,bty="n")
 
-#Group2
-ts.plot(d_W60.ts,d_W74.ts,d_W80.ts,
-        gpars = list(xlab=" ",ylab=" ",cex=1,xaxt="n",yaxt="n"),
-        col=c("maroon","green","blue","purple","blue","green"),lwd=c(2,2,2,2),lty=c(1,1,1),ylim=c(-2,2.5))
-abline(v=seq(2000,2019,1),lty = 6, col = "cornsilk2")
-axis(2,cex.axis=1.2)
-grid (NA,NULL, lty = 6, col = "cornsilk2")
-legend('topleft',horiz = TRUE,legend=c("W60","W74","W80"),
-       col=c("maroon","green","blue","purple","blue","green"),lwd=c(2,2,2,2),lty=c(1,1,1),cex=1.2,bty="y")
-text(2018,-1.8,"Group II",cex=1.5,bty="n")
+
 
 #Group3
 ts.plot(d_W70.ts,d_W73.ts,d_W116.ts,
@@ -84,8 +75,18 @@ axis(2,cex.axis=1.2)
 grid (NA,NULL, lty = 6, col = "cornsilk2")
 legend('topleft',horiz = TRUE,legend=c("W70","W73","W116"),
        col=c("maroon","dark green","purple","orange","blue","green"),lwd=c(2,2,2,2),lty=c(1,1,1),cex=1.2,bty="y")
-text(2018,-1.8,"Group III",cex=1.5,bty="n")
+text(2018,-1.8,"Group II",cex=1.5,bty="n")
 
+#Group2
+ts.plot(d_W60.ts,d_W74.ts,d_W80.ts,
+        gpars = list(xlab=" ",ylab=" ",cex=1,xaxt="n",yaxt="n"),
+        col=c("maroon","green","blue","purple","blue","green"),lwd=c(2,2,2,2),lty=c(1,1,1),ylim=c(-2,2.5))
+abline(v=seq(2000,2019,1),lty = 6, col = "cornsilk2")
+axis(2,cex.axis=1.2)
+grid (NA,NULL, lty = 6, col = "cornsilk2")
+legend('topleft',horiz = TRUE,legend=c("W60","W74","W80"),
+       col=c("maroon","green","blue","purple","blue","green"),lwd=c(2,2,2,2),lty=c(1,1,1),cex=1.2,bty="y")
+text(2018,-1.8,"Group III",cex=1.5,bty="n")
 
 year.text=c("2000","2001","2002","2003","2004","2005","2006","2007","2008","2009","2010","2011","2012","2013",
             "2014","2015","2016","2017","2018","2019")
@@ -106,18 +107,9 @@ legend('topleft',horiz = TRUE,legend=c("W63","W67","W78","W81","W115","W118"),
        col=c("blue","purple","orange","green","dark green","maroon"),lwd=c(2,2,2,2),lty=c(1,1,1,1,1,1,1),cex=1.2,bty="y")
 text(2018,-1.3,"Group I",cex=1.5,bty="n")
 
-#Group2
-ts.plot(s_W60.ts,s_W74.ts,s_W80.ts,
-        gpars = list(xlab=" ",ylab=" ",cex.axis=1.2,xaxt="n",yaxt="n"),
-        col=c("maroon","green","blue","purple","blue","green"),lwd=c(2,2,2,2),lty=c(1,1,1),ylim=c(-1.5,1.5))
-abline(v=seq(2000,2019,1),lty = 6, col = "cornsilk2")
-axis(2,cex.axis=1.2)
-grid (NA,NULL, lty = 6, col = "cornsilk2")
-legend('topleft',horiz = TRUE,legend=c("W60","W74","W80"),
-       col=c("maroon","green","blue","purple","blue","green"),lwd=c(2,2,2,2),lty=c(1,1,1),cex=1.2,bty="y")
-text(2018,-1.3,"Group II",cex=1.5,bty="n")
 
-#Group3
+
+#Group2
 ts.plot(s_W70.ts,s_W73.ts,s_W116.ts,
         gpars = list(xlab=" ",ylab=" ",cex=1,xaxt="n",yaxt="n"),
         col=c("maroon","dark green","purple","orange","blue","green"),lwd=c(2,2,2,2),lty=c(1,1,1),ylim=c(-1.5,1.5))
@@ -126,9 +118,18 @@ axis(2,cex.axis=1.2)
 grid (NA,NULL, lty = 6, col = "cornsilk2")
 legend('topleft',horiz = TRUE,legend=c("W70","W73","W116"),
        col=c("maroon","dark green","purple","orange","blue","green"),lwd=c(2,2,2,2),lty=c(1,1,1),cex=1.2,bty="y")
+text(2018,-1.3,"Group II",cex=1.5,bty="n")
+
+#Group3
+ts.plot(s_W60.ts,s_W74.ts,s_W80.ts,
+        gpars = list(xlab=" ",ylab=" ",cex.axis=1.2,xaxt="n",yaxt="n"),
+        col=c("maroon","green","blue","purple","blue","green"),lwd=c(2,2,2,2),lty=c(1,1,1),ylim=c(-1.5,1.5))
+abline(v=seq(2000,2019,1),lty = 6, col = "cornsilk2")
+axis(2,cex.axis=1.2)
+grid (NA,NULL, lty = 6, col = "cornsilk2")
+legend('topleft',horiz = TRUE,legend=c("W60","W74","W80"),
+       col=c("maroon","green","blue","purple","blue","green"),lwd=c(2,2,2,2),lty=c(1,1,1),cex=1.2,bty="y")
 text(2018,-1.3,"Group III",cex=1.5,bty="n")
-
-
 
 year.text=c("2000","2001","2002","2003","2004","2005","2006","2007","2008","2009","2010","2011","2012","2013",
             "2014","2015","2016","2017","2018","2019")
